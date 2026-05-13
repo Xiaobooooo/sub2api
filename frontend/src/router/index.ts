@@ -33,7 +33,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/HomeView.vue'),
     meta: {
       requiresAuth: false,
-      title: 'Home'
+      title: 'Home',
+      titleKey: 'marketing.home.pageTitle'
     }
   },
   {
@@ -42,7 +43,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/PricingView.vue'),
     meta: {
       requiresAuth: false,
-      title: '模型价格'
+      title: '模型价格',
+      titleKey: 'marketing.pricing.pageTitle'
     }
   },
   {
@@ -51,7 +53,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/DocsView.vue'),
     meta: {
       requiresAuth: false,
-      title: '接入文档'
+      title: '接入文档',
+      titleKey: 'marketing.docs.pageTitle'
     }
   },
   {

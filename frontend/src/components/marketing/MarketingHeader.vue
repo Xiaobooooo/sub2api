@@ -1,13 +1,13 @@
 <template>
-  <header class="sticky top-0 z-40 border-b border-white/10 bg-[#171713]/90 backdrop-blur-xl">
-    <nav class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+  <header class="sticky top-0 z-40 border-b border-gray-200/80 bg-white/85 backdrop-blur-xl dark:border-dark-800 dark:bg-dark-950/85">
+    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
       <router-link
         to="/home"
-        class="flex min-w-0 items-center gap-3 text-[#faf9f5]"
+        class="flex min-w-0 items-center gap-3 text-gray-900 dark:text-white"
         @click="mobileOpen = false"
       >
         <span
-          class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-primary-300/25 bg-[#252320]"
+          class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-primary text-white shadow-glow"
         >
           <img
             v-if="siteLogo"
@@ -15,31 +15,33 @@
             alt="Logo"
             class="h-full w-full object-contain"
           />
-          <Icon v-else name="sparkles" size="md" class="text-primary-300" />
+          <Icon v-else name="sparkles" size="md" />
         </span>
-        <span class="truncate font-serif text-2xl font-semibold text-primary-200">
+        <span class="truncate text-xl font-bold tracking-tight">
           {{ siteName }}
         </span>
       </router-link>
 
-      <div class="hidden items-center gap-8 lg:flex">
+      <div class="hidden items-center gap-1 lg:flex">
         <router-link
           v-for="item in navItems"
           :key="item.label"
           :to="item.to"
-          class="text-sm font-medium transition-colors"
-          :class="isActive(item.path) ? 'text-primary-200' : 'text-[#d7d2c8] hover:text-white'"
+          class="rounded-xl px-3 py-2 text-sm font-medium transition-colors"
+          :class="isActive(item.path)
+            ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-dark-300 dark:hover:bg-dark-800 dark:hover:text-white'"
         >
           {{ item.label }}
         </router-link>
       </div>
 
-      <div class="hidden items-center gap-3 lg:flex">
+      <div class="hidden items-center gap-2 lg:flex">
         <LocaleSwitcher />
         <button
           type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-lg text-[#d7d2c8] transition-colors hover:bg-white/10 hover:text-white"
-          :title="isDark ? '切换到浅色模式' : '切换到深色模式'"
+          class="btn btn-ghost btn-icon"
+          :title="isDark ? copy.switchToLight : copy.switchToDark"
           @click="toggleTheme"
         >
           <Icon v-if="isDark" name="sun" size="md" />
@@ -47,17 +49,17 @@
         </button>
         <router-link
           :to="isAuthenticated ? dashboardPath : '/login'"
-          class="inline-flex h-11 items-center gap-2 rounded-lg bg-primary-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
+          class="btn btn-primary btn-md"
         >
-          {{ isAuthenticated ? '控制台' : '登录' }}
+          {{ isAuthenticated ? copy.dashboard : copy.login }}
           <Icon name="arrowRight" size="sm" />
         </router-link>
       </div>
 
       <button
         type="button"
-        class="flex h-10 w-10 items-center justify-center rounded-lg text-[#faf9f5] transition-colors hover:bg-white/10 lg:hidden"
-        aria-label="打开导航"
+        class="btn btn-ghost btn-icon lg:hidden"
+        :aria-label="copy.openNavigation"
         @click="mobileOpen = !mobileOpen"
       >
         <Icon :name="mobileOpen ? 'x' : 'menu'" size="md" />
@@ -66,25 +68,27 @@
 
     <div
       v-if="mobileOpen"
-      class="border-t border-white/10 bg-[#171713] px-5 py-4 shadow-2xl lg:hidden"
+      class="border-t border-gray-200 bg-white px-4 py-4 shadow-lg dark:border-dark-800 dark:bg-dark-950 lg:hidden"
     >
       <div class="mx-auto flex max-w-7xl flex-col gap-2">
         <router-link
           v-for="item in navItems"
           :key="item.label"
           :to="item.to"
-          class="rounded-lg px-3 py-3 text-sm font-medium transition-colors"
-          :class="isActive(item.path) ? 'bg-primary-600/20 text-primary-200' : 'text-[#d7d2c8] hover:bg-white/10 hover:text-white'"
+          class="rounded-xl px-3 py-3 text-sm font-medium transition-colors"
+          :class="isActive(item.path)
+            ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-dark-300 dark:hover:bg-dark-800 dark:hover:text-white'"
           @click="mobileOpen = false"
         >
           {{ item.label }}
         </router-link>
-        <div class="mt-3 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div class="mt-3 flex items-center justify-between gap-3 border-t border-gray-100 pt-4 dark:border-dark-800">
           <LocaleSwitcher />
           <button
             type="button"
-            class="flex h-10 w-10 items-center justify-center rounded-lg text-[#d7d2c8] transition-colors hover:bg-white/10 hover:text-white"
-            :title="isDark ? '切换到浅色模式' : '切换到深色模式'"
+            class="btn btn-ghost btn-icon"
+            :title="isDark ? copy.switchToLight : copy.switchToDark"
             @click="toggleTheme"
           >
             <Icon v-if="isDark" name="sun" size="md" />
@@ -92,10 +96,10 @@
           </button>
           <router-link
             :to="isAuthenticated ? dashboardPath : '/login'"
-            class="inline-flex h-10 items-center justify-center rounded-lg bg-primary-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
+            class="btn btn-primary btn-md"
             @click="mobileOpen = false"
           >
-            {{ isAuthenticated ? '控制台' : '登录' }}
+            {{ isAuthenticated ? copy.dashboard : copy.login }}
           </router-link>
         </div>
       </div>
@@ -105,23 +109,57 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { useAppStore, useAuthStore } from '@/stores'
 
 const route = useRoute()
+const { locale } = useI18n()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const mobileOpen = ref(false)
 const isDark = ref(document.documentElement.classList.contains('dark'))
 
-const navItems = [
-  { label: '首页', to: '/home', path: '/home' },
-  { label: '模型价格', to: '/pricing', path: '/pricing' },
-  { label: '接入文档', to: '/docs', path: '/docs' },
-  { label: '常见问题', to: { path: '/home', hash: '#faq' }, path: '/home#faq' }
-] as const
+const headerCopy = {
+  zh: {
+    nav: {
+      home: '首页',
+      pricing: '模型价格',
+      docs: '接入文档',
+      faq: '常见问题'
+    },
+    dashboard: '控制台',
+    login: '登录',
+    openNavigation: '打开导航',
+    switchToLight: '切换到浅色模式',
+    switchToDark: '切换到深色模式'
+  },
+  en: {
+    nav: {
+      home: 'Home',
+      pricing: 'Pricing',
+      docs: 'Docs',
+      faq: 'FAQ'
+    },
+    dashboard: 'Dashboard',
+    login: 'Login',
+    openNavigation: 'Open navigation',
+    switchToLight: 'Switch to light mode',
+    switchToDark: 'Switch to dark mode'
+  }
+} as const
+
+const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
+const copy = computed(() => headerCopy[activeLocale.value])
+
+const navItems = computed(() => [
+  { label: copy.value.nav.home, to: '/home', path: '/home' },
+  { label: copy.value.nav.pricing, to: '/pricing', path: '/pricing' },
+  { label: copy.value.nav.docs, to: '/docs', path: '/docs' },
+  { label: copy.value.nav.faq, to: { path: '/home', hash: '#faq' }, path: '/home#faq' }
+])
 
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
