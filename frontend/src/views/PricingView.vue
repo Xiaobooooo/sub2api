@@ -38,7 +38,6 @@
             <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 class="text-xl font-semibold text-gray-950 dark:text-white">{{ copy.platforms.title }}</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-dark-400">{{ copy.platforms.description }}</p>
               </div>
               <div class="tabs inline-flex w-fit max-w-full overflow-x-auto">
                 <button
@@ -60,41 +59,33 @@
             <div class="rounded-xl border border-primary-100 bg-primary-50 p-4 dark:border-primary-800/50 dark:bg-primary-900/20">
               <div class="flex items-start gap-3">
                 <div class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-primary-600 shadow-sm dark:bg-dark-800 dark:text-primary-300">
-                  <Icon name="creditCard" size="sm" />
+                  <Icon name="calculator" size="sm" />
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-950 dark:text-white">{{ copy.recharge.title }}</p>
-                  <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ copy.recharge.description }}</p>
+                  <p class="font-semibold text-gray-950 dark:text-white">{{ copy.pricingRule.title }}</p>
+                  <p class="mt-1 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
+                    {{ pricingRuleDescription }}
+                  </p>
                 </div>
               </div>
             </div>
 
             <div class="mt-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-dark-700 dark:bg-dark-800/60">
-              <div class="grid gap-4 md:grid-cols-3">
-                <div>
-                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.group }}</p>
-                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ activePlatformData.groupName }}</p>
+              <div class="flex items-start gap-4">
+                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
+                  <Icon name="badge" size="sm" />
                 </div>
-                <div>
-                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.multiplier }}</p>
-                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ activePlatformData.multiplierLabel }}</p>
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.formula }}</p>
-                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ copy.rule.formulaValue }}</p>
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-gray-500 dark:text-dark-400">{{ copy.groupSelector.title }}</p>
+                  <p class="mt-1 text-base font-semibold text-gray-950 dark:text-white">{{ activePlatformData.groupName }}</p>
+                  <p class="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
+                    {{ activePlatformData.groupDescription }}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 grid gap-4 lg:grid-cols-[320px_1fr]">
-              <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-dark-700 dark:bg-dark-800/60">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
-                  <Icon :name="activePlatformData.icon" size="lg" />
-                </div>
-                <h3 class="mt-4 text-lg font-semibold text-gray-950 dark:text-white">{{ activePlatformData.label }}</h3>
-                <p class="mt-2 text-sm leading-7 text-gray-500 dark:text-dark-400">{{ activePlatformData.description }}</p>
-              </div>
-
+            <div class="mt-6 grid gap-4">
               <div class="table-container">
                 <table class="table">
                   <thead>
@@ -170,20 +161,22 @@ const pricingCopy = {
     hero: {
       badge: '支持平台',
       title: '模型价格',
-      description: '当前仅支持 Claude 和 OpenAI（GPT）两个平台。充值后按美元余额计费。',
+      description: '按美元余额计费',
       notes: [
         { label: '支持平台', value: 'Claude / OpenAI' },
-        { label: '充值比例', value: '充值 1 人民币 = 1 美元余额' },
-        { label: '余额单位', value: '美元余额' }
+        { label: '充值比例', value: '充值 1RMB = 1 USD' },
+        { label: '余额单位', value: 'USD' }
       ]
     },
     platforms: {
       title: '选择平台',
-      description: '查看当前可用平台和模型 ID。'
     },
-    recharge: {
-      title: '充值比例',
-      description: '充值 1 人民币可得到 1 美元余额，模型调用消耗美元余额。'
+    pricingRule: {
+      title: '计价规则',
+      formula: '分组价格 = 官方价格 × 分组倍率 ÷ 7'
+    },
+    groupSelector: {
+      title: '分组选择'
     },
     table: {
       model: '模型 ID',
@@ -193,24 +186,18 @@ const pricingCopy = {
       cacheRead: '缓存读取',
       saving: '节省幅度',
       officialPrefix: '官方参考',
-      balanceSuffix: '美元余额 / 1M tokens',
+      balanceSuffix: '美元余额 / 1M Tokens',
       notAvailable: '不适用',
       copyModel: '复制模型 ID'
-    },
-    rule: {
-      group: '参考分组',
-      multiplier: '倍率',
-      formula: '计算规则',
-      formulaValue: '官方价 × 倍率 ÷ 7'
     },
     data: {
       claude: {
         label: 'Claude',
         icon: 'beaker',
         description: '当前 Claude 平台支持以下模型。',
-        groupName: 'Claude Max（仅限CC）',
+        groupName: 'Claude Official',
+        groupDescription: '2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等',
         multiplier: 2,
-        multiplierLabel: '2x · 约 2.9 折',
         saving: '省 71%',
         models: [
           { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
@@ -223,10 +210,10 @@ const pricingCopy = {
         label: 'OpenAI (GPT)',
         icon: 'cpu',
         description: '当前 OpenAI 平台支持以下 GPT 模型。',
-        groupName: 'Codex（企业级）',
-        multiplier: 0.7,
-        multiplierLabel: '0.7x · 约 1 折',
-        saving: '省 90%',
+        groupName: 'OpenaiOfficial',
+        groupDescription: '0.6x 倍率 · 相当于约 8.5 折\n官方直连，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾',
+        multiplier: 0.6,
+        saving: '约 8.5 折',
         models: [
           { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
           { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
@@ -240,20 +227,22 @@ const pricingCopy = {
     hero: {
       badge: 'Supported platforms',
       title: 'Model Pricing',
-      description: 'Only Claude and OpenAI (GPT) are currently supported. Usage is billed against USD balance after top-up.',
+      description: 'Usage is billed against USD balance.',
       notes: [
         { label: 'Platforms', value: 'Claude / OpenAI' },
-        { label: 'Top-up ratio', value: '1 RMB top-up = 1 USD balance' },
-        { label: 'Balance unit', value: 'USD balance' }
+        { label: 'Top-up ratio', value: '1 RMB top-up = 1 USD' },
+        { label: 'Balance unit', value: 'USD' }
       ]
     },
     platforms: {
       title: 'Choose platform',
-      description: 'View currently available platforms and model IDs.'
     },
-    recharge: {
-      title: 'Top-up ratio',
-      description: 'A 1 RMB top-up gives 1 USD balance. Model usage consumes USD balance.'
+    pricingRule: {
+      title: 'Pricing rule',
+      formula: 'Group price = official price × group multiplier ÷ 7'
+    },
+    groupSelector: {
+      title: 'Group selection'
     },
     table: {
       model: 'Model ID',
@@ -263,24 +252,18 @@ const pricingCopy = {
       cacheRead: 'Cache read',
       saving: 'Savings',
       officialPrefix: 'Official ref.',
-      balanceSuffix: 'USD balance / 1M tokens',
+      balanceSuffix: 'USD balance / 1M Tokens',
       notAvailable: 'N/A',
       copyModel: 'Copy model ID'
-    },
-    rule: {
-      group: 'Reference group',
-      multiplier: 'Multiplier',
-      formula: 'Formula',
-      formulaValue: 'Official price × multiplier ÷ 7'
     },
     data: {
       claude: {
         label: 'Claude',
         icon: 'beaker',
         description: 'The Claude platform currently supports these models.',
-        groupName: 'Claude Max (CC only)',
+        groupName: 'Claude Official',
+        groupDescription: '2x multiplier · about 29% of official price\nOfficial full-powered subscription. Claude Code and Claude Desktop only; OpenClaw, Hermes, and similar clients are not supported.',
         multiplier: 2,
-        multiplierLabel: '2x · about 29%',
         saving: 'Save 71%',
         models: [
           { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
@@ -293,10 +276,10 @@ const pricingCopy = {
         label: 'OpenAI (GPT)',
         icon: 'cpu',
         description: 'The OpenAI platform currently supports these GPT models.',
-        groupName: 'Codex (Enterprise)',
-        multiplier: 0.7,
-        multiplierLabel: '0.7x · about 10%',
-        saving: 'Save 90%',
+        groupName: 'OpenaiOfficial',
+        groupDescription: '0.6x multiplier · about 85% of official price\nOfficial direct access. GPT 5.5 can replace Opus 4.7 and is recommended for coding and high-volume agent work.',
+        multiplier: 0.6,
+        saving: 'About 85%',
         models: [
           { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
           { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
@@ -329,8 +312,11 @@ const PriceCell = defineComponent({
 
       const groupPrice = (props.price * props.multiplier) / EXCHANGE_RATE
 
-      return h('div', { class: 'min-w-[140px]' }, [
-        h('p', { class: 'text-sm font-semibold text-gray-950 dark:text-white' }, `${groupPrice.toFixed(2)} ${copy.value.table.balanceSuffix}`),
+      return h('div', { class: 'min-w-[172px]' }, [
+        h('div', { class: 'inline-flex max-w-full flex-wrap items-baseline gap-x-1 rounded-lg bg-primary-50 px-2.5 py-1 ring-1 ring-primary-100 dark:bg-primary-500/10 dark:ring-primary-400/20' }, [
+          h('span', { class: 'text-base font-bold tabular-nums text-primary-700 dark:text-primary-100' }, groupPrice.toFixed(2)),
+          h('span', { class: 'text-[11px] font-semibold text-primary-700/80 dark:text-primary-200/80' }, copy.value.table.balanceSuffix)
+        ]),
         h('p', { class: 'mt-1 text-xs text-gray-500 dark:text-dark-400' }, `${copy.value.table.officialPrefix} ￥${props.price.toFixed(2)}`)
       ])
     }
@@ -341,6 +327,16 @@ const platforms = computed(() => [
   { id: 'openai' as const, ...copy.value.data.openai }
 ])
 const activePlatformData = computed(() => copy.value.data[activePlatform.value])
+const pricingRuleDescription = computed(() => {
+  const model = activePlatformData.value.models[0]
+  const groupPrice = formatGroupPrice(model.input, activePlatformData.value.multiplier)
+
+  if (activeLocale.value === 'zh') {
+    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activePlatformData.value.groupName} ${groupPrice} ${copy.value.table.balanceSuffix}`
+  }
+
+  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activePlatformData.value.groupName} ${groupPrice} ${copy.value.table.balanceSuffix}`
+})
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 
 watchEffect(() => {
@@ -349,5 +345,9 @@ watchEffect(() => {
 
 async function copyModelId(id: string): Promise<void> {
   await navigator.clipboard?.writeText(id)
+}
+
+function formatGroupPrice(price: number, multiplier: number): string {
+  return ((price * multiplier) / EXCHANGE_RATE).toFixed(2)
 }
 </script>
