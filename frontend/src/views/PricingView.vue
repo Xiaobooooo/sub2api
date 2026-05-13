@@ -48,7 +48,7 @@
                   :class="{ 'tab-active': activePlatform === platform.id }"
                   @click="activePlatform = platform.id"
                 >
-                  <Icon :name="platform.icon" size="sm" />
+                  <img :src="platform.logo" :alt="`${platform.label} logo`" class="h-4 w-4 object-contain" />
                   {{ platform.label }}
                 </button>
               </div>
@@ -193,7 +193,7 @@ const pricingCopy = {
     data: {
       claude: {
         label: 'Claude',
-        icon: 'beaker',
+        logo: '/claude.svg',
         description: '当前 Claude 平台支持以下模型。',
         groupName: 'Claude Official',
         groupDescription: '2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等',
@@ -208,7 +208,7 @@ const pricingCopy = {
       },
       openai: {
         label: 'OpenAI (GPT)',
-        icon: 'cpu',
+        logo: '/openai.svg',
         description: '当前 OpenAI 平台支持以下 GPT 模型。',
         groupName: 'OpenaiOfficial',
         groupDescription: '0.6x 倍率 · 相当于约 8.5 折\n官方直连，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾',
@@ -259,7 +259,7 @@ const pricingCopy = {
     data: {
       claude: {
         label: 'Claude',
-        icon: 'beaker',
+        logo: '/claude.svg',
         description: 'The Claude platform currently supports these models.',
         groupName: 'Claude Official',
         groupDescription: '2x multiplier · about 29% of official price\nOfficial full-powered subscription. Claude Code and Claude Desktop only; OpenClaw, Hermes, and similar clients are not supported.',
@@ -274,7 +274,7 @@ const pricingCopy = {
       },
       openai: {
         label: 'OpenAI (GPT)',
-        icon: 'cpu',
+        logo: '/openai.svg',
         description: 'The OpenAI platform currently supports these GPT models.',
         groupName: 'OpenaiOfficial',
         groupDescription: '0.6x multiplier · about 85% of official price\nOfficial direct access. GPT 5.5 can replace Opus 4.7 and is recommended for coding and high-volume agent work.',

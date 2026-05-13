@@ -20,7 +20,7 @@
                 : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-dark-300 dark:hover:bg-dark-800 dark:hover:text-white'"
               @click="activeDoc = doc.id"
             >
-              <Icon :name="doc.icon" size="sm" />
+              <img :src="doc.logo" :alt="`${doc.shortTitle} logo`" class="h-4 w-4 object-contain" />
               {{ doc.shortTitle }}
             </button>
           </nav>
@@ -168,7 +168,7 @@ const docsCopy = {
         title: 'OpenAI (GPT) 接入',
         description: '使用 OpenAI 兼容协议调用当前支持的 GPT 模型。',
         modelHint: '支持模型：gpt-5.5、gpt-5.4、gpt-5.3-codex',
-        icon: 'cpu',
+        logo: '/openai.svg',
         baseUrl: 'https://your-domain.example/v1',
         commands: {
           windows: '$env:OPENAI_API_KEY="sk-..."\n$env:OPENAI_BASE_URL="https://your-domain.example/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
@@ -185,7 +185,7 @@ const docsCopy = {
         title: 'Claude 接入',
         description: '使用 Claude 兼容配置调用当前支持的 Claude 模型。',
         modelHint: '支持模型：claude-opus-4-7、claude-opus-4-6、claude-sonnet-4-6、claude-haiku-4-5',
-        icon: 'beaker',
+        logo: '/claude.svg',
         baseUrl: 'https://your-domain.example',
         commands: {
           windows: '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://your-domain.example"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
@@ -228,7 +228,7 @@ const docsCopy = {
         title: 'OpenAI (GPT) Integration',
         description: 'Use the OpenAI-compatible protocol to call supported GPT models.',
         modelHint: 'Supported models: gpt-5.5, gpt-5.4, gpt-5.3-codex',
-        icon: 'cpu',
+        logo: '/openai.svg',
         baseUrl: 'https://your-domain.example/v1',
         commands: {
           windows: '$env:OPENAI_API_KEY="sk-..."\n$env:OPENAI_BASE_URL="https://your-domain.example/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
@@ -245,7 +245,7 @@ const docsCopy = {
         title: 'Claude Integration',
         description: 'Use Claude-compatible settings to call supported Claude models.',
         modelHint: 'Supported models: claude-opus-4-7, claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5',
-        icon: 'beaker',
+        logo: '/claude.svg',
         baseUrl: 'https://your-domain.example',
         commands: {
           windows: '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://your-domain.example"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',

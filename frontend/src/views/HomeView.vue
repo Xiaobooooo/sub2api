@@ -108,8 +108,8 @@
               :key="platform.name"
               class="card card-hover p-6"
             >
-              <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
-                <Icon :name="platform.icon" size="md" />
+              <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-gray-200 dark:bg-dark-800 dark:ring-dark-700">
+                <img :src="platform.logo" :alt="`${platform.name} logo`" class="h-full w-full object-contain" />
               </div>
               <h3 class="mt-4 text-lg font-semibold text-gray-950 dark:text-white">{{ platform.name }}</h3>
               <div class="mt-4 flex flex-wrap gap-2">
@@ -218,8 +218,8 @@ const homeCopy = {
       title: '当前支持 Claude 和 OpenAI',
       description: '页面只展示当前可用的平台与模型 ID。',
       items: [
-        { name: 'Claude', icon: 'beaker', models: claudeModels },
-        { name: 'OpenAI (GPT)', icon: 'cpu', models: openAiModels }
+        { name: 'Claude', logo: '/claude.svg', models: claudeModels },
+        { name: 'OpenAI (GPT)', logo: '/openai.svg', models: openAiModels }
       ]
     },
     pricing: {
@@ -266,8 +266,8 @@ const homeCopy = {
       title: 'Claude and OpenAI are currently supported',
       description: 'Only currently available platforms and model IDs are shown.',
       items: [
-        { name: 'Claude', icon: 'beaker', models: claudeModels },
-        { name: 'OpenAI (GPT)', icon: 'cpu', models: openAiModels }
+        { name: 'Claude', logo: '/claude.svg', models: claudeModels },
+        { name: 'OpenAI (GPT)', logo: '/openai.svg', models: openAiModels }
       ]
     },
     pricing: {
