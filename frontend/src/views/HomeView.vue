@@ -73,12 +73,7 @@
                     class="code-line"
                     :style="{ '--line-delay': `${index * 120}ms` }"
                   >
-                    <span v-if="line.prompt" class="code-prompt">$</span>
                     <span :class="line.className">{{ line.text }}</span>
-                  </div>
-                  <div class="code-line" :style="{ '--line-delay': `${terminalLines.length * 120}ms` }">
-                    <span class="code-prompt">$</span>
-                    <span class="cursor"></span>
                   </div>
                 </div>
 
@@ -292,12 +287,10 @@ const homeCopy = {
 } as const
 
 const terminalLines = [
-  { prompt: true, text: 'sub2api models --platform claude,openai', className: 'code-cmd' },
-  { prompt: false, text: 'claude-opus-4-7  claude-sonnet-4-6  gpt-5.5', className: 'code-muted' },
-  { prompt: true, text: 'curl -X POST /v1/chat/completions -m gpt-5.5', className: 'code-cmd' },
-  { prompt: false, text: '200 OK  routed=OpenAI(GPT)  balance=USD', className: 'code-success' },
-  { prompt: true, text: 'claude --model claude-haiku-4-5', className: 'code-cmd' },
-  { prompt: false, text: '200 OK  routed=Claude  key=active', className: 'code-success' }
+  { text: 'export ANTHROPIC_BASE_URL="https://api.xiaobocode.com"', className: 'code-cmd' },
+  { text: 'export ANTHROPIC_AUTH_TOKEN="sk-....."', className: 'code-cmd' },
+  { text: 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1', className: 'code-muted' },
+  { text: 'claude', className: 'code-success' }
 ] as const
 
 const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
@@ -420,11 +413,6 @@ watchEffect(() => {
   animation-delay: var(--line-delay, 0ms);
 }
 
-.code-prompt {
-  color: #86efac;
-  font-weight: 800;
-}
-
 .code-cmd {
   color: #e2e8f0;
 }
@@ -437,15 +425,6 @@ watchEffect(() => {
   color: #86efac;
 }
 
-.cursor {
-  display: inline-block;
-  width: 8px;
-  height: 18px;
-  margin-top: 4px;
-  background: #86efac;
-  animation: blink 1s step-end infinite;
-}
-
 @keyframes line-appear {
   from {
     opacity: 0;
@@ -455,18 +434,6 @@ watchEffect(() => {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-
-  51%,
-  100% {
-    opacity: 0;
   }
 }
 

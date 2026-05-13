@@ -40,7 +40,7 @@
                 <h2 class="text-xl font-semibold text-gray-950 dark:text-white">{{ copy.platforms.title }}</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-dark-400">{{ copy.platforms.description }}</p>
               </div>
-              <div class="tabs w-full overflow-x-auto lg:w-auto">
+              <div class="tabs inline-flex w-fit max-w-full overflow-x-auto">
                 <button
                   v-for="platform in platforms"
                   :key="platform.id"
@@ -69,6 +69,23 @@
               </div>
             </div>
 
+            <div class="mt-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-dark-700 dark:bg-dark-800/60">
+              <div class="grid gap-4 md:grid-cols-3">
+                <div>
+                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.group }}</p>
+                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ activePlatformData.groupName }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.multiplier }}</p>
+                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ activePlatformData.multiplierLabel }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 dark:text-dark-400">{{ copy.rule.formula }}</p>
+                  <p class="mt-1 text-sm font-semibold text-gray-950 dark:text-white">{{ copy.rule.formulaValue }}</p>
+                </div>
+              </div>
+            </div>
+
             <div class="mt-6 grid gap-4 lg:grid-cols-[320px_1fr]">
               <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-dark-700 dark:bg-dark-800/60">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
@@ -83,27 +100,33 @@
                   <thead>
                     <tr>
                       <th>{{ copy.table.model }}</th>
-                      <th>{{ copy.table.platform }}</th>
-                      <th>{{ copy.table.balanceUnit }}</th>
+                      <th>{{ copy.table.input }}</th>
+                      <th>{{ copy.table.output }}</th>
+                      <th>{{ copy.table.cacheWrite }}</th>
+                      <th>{{ copy.table.cacheRead }}</th>
+                      <th>{{ copy.table.saving }}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="model in activePlatformData.models" :key="model">
+                    <tr v-for="model in activePlatformData.models" :key="model.id">
                       <td>
                         <div class="flex items-center gap-2">
-                          <span class="font-mono font-semibold text-gray-950 dark:text-white">{{ model }}</span>
+                          <span class="font-mono font-semibold text-gray-950 dark:text-white">{{ model.id }}</span>
                           <button
                             type="button"
                             class="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700"
                             :title="copy.table.copyModel"
-                            @click="copyModelId(model)"
+                            @click="copyModelId(model.id)"
                           >
                             <Icon name="copy" size="xs" />
                           </button>
                         </div>
                       </td>
-                      <td>{{ activePlatformData.label }}</td>
-                      <td>{{ copy.table.usdBalance }}</td>
+                      <td><PriceCell :price="model.input" :multiplier="activePlatformData.multiplier" /></td>
+                      <td><PriceCell :price="model.output" :multiplier="activePlatformData.multiplier" /></td>
+                      <td><PriceCell :price="model.cacheWrite" :multiplier="activePlatformData.multiplier" /></td>
+                      <td><PriceCell :price="model.cacheRead" :multiplier="activePlatformData.multiplier" /></td>
+                      <td><span class="badge badge-success">{{ activePlatformData.saving }}</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -119,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, defineComponent, h, ref, watchEffect, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MarketingFooter from '@/components/marketing/MarketingFooter.vue'
 import MarketingHeader from '@/components/marketing/MarketingHeader.vue'
@@ -127,6 +150,15 @@ import Icon from '@/components/icons/Icon.vue'
 import { useAppStore } from '@/stores'
 
 type PlatformId = 'claude' | 'openai'
+type ModelPrice = {
+  id: string
+  input: number
+  output: number
+  cacheWrite: number | null
+  cacheRead: number
+}
+
+const EXCHANGE_RATE = 7
 
 const { locale } = useI18n()
 const appStore = useAppStore()
@@ -155,23 +187,51 @@ const pricingCopy = {
     },
     table: {
       model: '模型 ID',
-      platform: '平台',
-      balanceUnit: '计费余额',
-      usdBalance: '美元余额',
+      input: '输入价格',
+      output: '输出价格',
+      cacheWrite: '缓存创建',
+      cacheRead: '缓存读取',
+      saving: '节省幅度',
+      officialPrefix: '官方参考',
+      balanceSuffix: '美元余额 / 1M tokens',
+      notAvailable: '不适用',
       copyModel: '复制模型 ID'
+    },
+    rule: {
+      group: '参考分组',
+      multiplier: '倍率',
+      formula: '计算规则',
+      formulaValue: '官方价 × 倍率 ÷ 7'
     },
     data: {
       claude: {
         label: 'Claude',
         icon: 'beaker',
         description: '当前 Claude 平台支持以下模型。',
-        models: ['claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5']
+        groupName: 'Claude Max（仅限CC）',
+        multiplier: 2,
+        multiplierLabel: '2x · 约 2.9 折',
+        saving: '省 71%',
+        models: [
+          { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
+          { id: 'claude-opus-4-6', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
+          { id: 'claude-sonnet-4-6', input: 21, output: 105, cacheWrite: 26.25, cacheRead: 2.1 },
+          { id: 'claude-haiku-4-5', input: 7, output: 35, cacheWrite: 8.75, cacheRead: 0.7 }
+        ] satisfies ModelPrice[]
       },
       openai: {
         label: 'OpenAI (GPT)',
         icon: 'cpu',
         description: '当前 OpenAI 平台支持以下 GPT 模型。',
-        models: ['gpt-5.5', 'gpt-5.4', 'gpt-5.3-codex']
+        groupName: 'Codex（企业级）',
+        multiplier: 0.7,
+        multiplierLabel: '0.7x · 约 1 折',
+        saving: '省 90%',
+        models: [
+          { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
+          { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
+          { id: 'gpt-5.3-codex', input: 12.25, output: 98, cacheWrite: null, cacheRead: 1.23 }
+        ] satisfies ModelPrice[]
       }
     }
   },
@@ -197,23 +257,51 @@ const pricingCopy = {
     },
     table: {
       model: 'Model ID',
-      platform: 'Platform',
-      balanceUnit: 'Billing balance',
-      usdBalance: 'USD balance',
+      input: 'Input',
+      output: 'Output',
+      cacheWrite: 'Cache write',
+      cacheRead: 'Cache read',
+      saving: 'Savings',
+      officialPrefix: 'Official ref.',
+      balanceSuffix: 'USD balance / 1M tokens',
+      notAvailable: 'N/A',
       copyModel: 'Copy model ID'
+    },
+    rule: {
+      group: 'Reference group',
+      multiplier: 'Multiplier',
+      formula: 'Formula',
+      formulaValue: 'Official price × multiplier ÷ 7'
     },
     data: {
       claude: {
         label: 'Claude',
         icon: 'beaker',
         description: 'The Claude platform currently supports these models.',
-        models: ['claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5']
+        groupName: 'Claude Max (CC only)',
+        multiplier: 2,
+        multiplierLabel: '2x · about 29%',
+        saving: 'Save 71%',
+        models: [
+          { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
+          { id: 'claude-opus-4-6', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
+          { id: 'claude-sonnet-4-6', input: 21, output: 105, cacheWrite: 26.25, cacheRead: 2.1 },
+          { id: 'claude-haiku-4-5', input: 7, output: 35, cacheWrite: 8.75, cacheRead: 0.7 }
+        ] satisfies ModelPrice[]
       },
       openai: {
         label: 'OpenAI (GPT)',
         icon: 'cpu',
         description: 'The OpenAI platform currently supports these GPT models.',
-        models: ['gpt-5.5', 'gpt-5.4', 'gpt-5.3-codex']
+        groupName: 'Codex (Enterprise)',
+        multiplier: 0.7,
+        multiplierLabel: '0.7x · about 10%',
+        saving: 'Save 90%',
+        models: [
+          { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
+          { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
+          { id: 'gpt-5.3-codex', input: 12.25, output: 98, cacheWrite: null, cacheRead: 1.23 }
+        ] satisfies ModelPrice[]
       }
     }
   }
@@ -221,6 +309,33 @@ const pricingCopy = {
 
 const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
 const copy = computed(() => pricingCopy[activeLocale.value])
+const PriceCell = defineComponent({
+  name: 'PriceCell',
+  props: {
+    price: {
+      type: Number as PropType<number | null>,
+      default: null
+    },
+    multiplier: {
+      type: Number,
+      required: true
+    }
+  },
+  setup(props) {
+    return () => {
+      if (props.price === null) {
+        return h('span', { class: 'text-sm text-gray-400 dark:text-dark-500' }, copy.value.table.notAvailable)
+      }
+
+      const groupPrice = (props.price * props.multiplier) / EXCHANGE_RATE
+
+      return h('div', { class: 'min-w-[140px]' }, [
+        h('p', { class: 'text-sm font-semibold text-gray-950 dark:text-white' }, `${groupPrice.toFixed(2)} ${copy.value.table.balanceSuffix}`),
+        h('p', { class: 'mt-1 text-xs text-gray-500 dark:text-dark-400' }, `${copy.value.table.officialPrefix} ￥${props.price.toFixed(2)}`)
+      ])
+    }
+  }
+})
 const platforms = computed(() => [
   { id: 'claude' as const, ...copy.value.data.claude },
   { id: 'openai' as const, ...copy.value.data.openai }

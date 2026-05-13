@@ -48,7 +48,7 @@
                 <h2 class="text-xl font-semibold text-gray-950 dark:text-white">{{ copy.script.title }}</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-dark-400">{{ activeDocData.modelHint }}</p>
               </div>
-              <div class="tabs w-full overflow-x-auto lg:w-auto">
+              <div class="tabs inline-flex w-fit max-w-full overflow-x-auto">
                 <button
                   v-for="platform in platforms"
                   :key="platform.id"
