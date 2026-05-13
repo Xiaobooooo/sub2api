@@ -183,6 +183,11 @@ describe('路由守卫逻辑', () => {
       const redirect = simulateGuard('/home', { requiresAuth: false }, authState)
       expect(redirect).toBeNull()
     })
+
+    it('非后端模式下允许访问公开价格页和文档页', () => {
+      expect(simulateGuard('/pricing', { requiresAuth: false }, authState)).toBeNull()
+      expect(simulateGuard('/docs', { requiresAuth: false }, authState)).toBeNull()
+    })
   })
 
   // --- 已认证普通用户 ---
@@ -340,6 +345,18 @@ describe('路由守卫逻辑', () => {
       }
       const redirect = simulateGuard('/home', { requiresAuth: false }, authState)
       expect(redirect).toBe('/login')
+    })
+
+    it('后端模式未认证访问 /pricing 和 /docs 时跳转到登录页', () => {
+      const authState: MockAuthState = {
+        isAuthenticated: false,
+        isAdmin: false,
+        isSimpleMode: false,
+        backendModeEnabled: true,
+        hasPendingAuthSession: false,
+      }
+      expect(simulateGuard('/pricing', { requiresAuth: false }, authState)).toBe('/login')
+      expect(simulateGuard('/docs', { requiresAuth: false }, authState)).toBe('/login')
     })
 
     it('unauthenticated: /login is allowed', () => {
