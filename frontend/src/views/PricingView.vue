@@ -75,12 +75,25 @@
                 <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
                   <Icon name="badge" size="sm" />
                 </div>
-                <div class="min-w-0">
+                <div class="min-w-0 flex-1">
                   <p class="text-xs font-semibold text-gray-500 dark:text-dark-400">{{ copy.groupSelector.title }}</p>
-                  <p class="mt-1 text-base font-semibold text-gray-950 dark:text-white">{{ activePlatformData.groupName }}</p>
-                  <p class="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
-                    {{ activePlatformData.groupDescription }}
-                  </p>
+                  <div class="mt-3 grid gap-3 md:grid-cols-2">
+                    <button
+                      v-for="group in activePlatformData.groups"
+                      :key="group.id"
+                      type="button"
+                      class="rounded-xl border p-4 text-left transition"
+                      :class="group.id === activeGroupData.id
+                        ? 'border-primary-300 bg-primary-50 shadow-sm dark:border-primary-700/70 dark:bg-primary-900/20'
+                        : 'border-gray-200 bg-gray-50 hover:border-primary-200 hover:bg-white dark:border-dark-700 dark:bg-dark-900/40 dark:hover:border-primary-700/60 dark:hover:bg-dark-800/70'"
+                      @click="selectedGroups[activePlatform] = group.id"
+                    >
+                      <span class="block text-base font-semibold text-gray-950 dark:text-white">{{ group.name }}</span>
+                      <span class="mt-2 block whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
+                        {{ group.description }}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -113,11 +126,11 @@
                           </button>
                         </div>
                       </td>
-                      <td><PriceCell :price="model.input" :multiplier="activePlatformData.multiplier" /></td>
-                      <td><PriceCell :price="model.output" :multiplier="activePlatformData.multiplier" /></td>
-                      <td><PriceCell :price="model.cacheWrite" :multiplier="activePlatformData.multiplier" /></td>
-                      <td><PriceCell :price="model.cacheRead" :multiplier="activePlatformData.multiplier" /></td>
-                      <td><span class="badge badge-success">{{ activePlatformData.saving }}</span></td>
+                      <td><PriceCell :price="model.input" :multiplier="activeGroupData.multiplier" /></td>
+                      <td><PriceCell :price="model.output" :multiplier="activeGroupData.multiplier" /></td>
+                      <td><PriceCell :price="model.cacheWrite" :multiplier="activeGroupData.multiplier" /></td>
+                      <td><PriceCell :price="model.cacheRead" :multiplier="activeGroupData.multiplier" /></td>
+                      <td><span class="badge badge-success">{{ activeGroupData.saving }}</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -148,12 +161,23 @@ type ModelPrice = {
   cacheWrite: number | null
   cacheRead: number
 }
+type PriceGroup = {
+  id: string
+  name: string
+  description: string
+  multiplier: number
+  saving: string
+}
 
 const EXCHANGE_RATE = 7
 
 const { locale } = useI18n()
 const appStore = useAppStore()
 const activePlatform = ref<PlatformId>('claude')
+const selectedGroups = ref<Record<PlatformId, string>>({
+  claude: 'claude-official',
+  openai: 'openai-official'
+})
 
 const pricingCopy = {
   zh: {
@@ -195,10 +219,15 @@ const pricingCopy = {
         label: 'Claude',
         logo: '/claude.svg',
         description: '当前 Claude 平台支持以下模型。',
-        groupName: 'Claude Official',
-        groupDescription: '2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等',
-        multiplier: 2,
-        saving: '省 71%',
+        groups: [
+          {
+            id: 'claude-official',
+            name: 'Claude Official',
+            description: '2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等',
+            multiplier: 2,
+            saving: '省 71%'
+          }
+        ] satisfies PriceGroup[],
         models: [
           { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
           { id: 'claude-opus-4-6', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
@@ -210,10 +239,15 @@ const pricingCopy = {
         label: 'OpenAI (GPT)',
         logo: '/openai.svg',
         description: '当前 OpenAI 平台支持以下 GPT 模型。',
-        groupName: 'OpenaiOfficial',
-        groupDescription: '0.6x 倍率 · 相当于约 8.5 折\n官方直连，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾',
-        multiplier: 0.6,
-        saving: '约 8.5 折',
+        groups: [
+          {
+            id: 'openai-official',
+            name: 'OpenaiOfficial',
+            description: '0.6x 倍率 · 相当于约 8.5 折\n官方直连，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾',
+            multiplier: 0.6,
+            saving: '约 8.5 折'
+          }
+        ] satisfies PriceGroup[],
         models: [
           { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
           { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
@@ -261,10 +295,15 @@ const pricingCopy = {
         label: 'Claude',
         logo: '/claude.svg',
         description: 'The Claude platform currently supports these models.',
-        groupName: 'Claude Official',
-        groupDescription: '2x multiplier · about 29% of official price\nOfficial full-powered subscription. Claude Code and Claude Desktop only; OpenClaw, Hermes, and similar clients are not supported.',
-        multiplier: 2,
-        saving: 'Save 71%',
+        groups: [
+          {
+            id: 'claude-official',
+            name: 'Claude Official',
+            description: '2x multiplier · about 29% of official price\nOfficial full-powered subscription. Claude Code and Claude Desktop only; OpenClaw, Hermes, and similar clients are not supported.',
+            multiplier: 2,
+            saving: 'Save 71%'
+          }
+        ] satisfies PriceGroup[],
         models: [
           { id: 'claude-opus-4-7', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
           { id: 'claude-opus-4-6', input: 35, output: 175, cacheWrite: 43.75, cacheRead: 3.5 },
@@ -276,10 +315,15 @@ const pricingCopy = {
         label: 'OpenAI (GPT)',
         logo: '/openai.svg',
         description: 'The OpenAI platform currently supports these GPT models.',
-        groupName: 'OpenaiOfficial',
-        groupDescription: '0.6x multiplier · about 85% of official price\nOfficial direct access. GPT 5.5 can replace Opus 4.7 and is recommended for coding and high-volume agent work.',
-        multiplier: 0.6,
-        saving: 'About 85%',
+        groups: [
+          {
+            id: 'openai-official',
+            name: 'OpenaiOfficial',
+            description: '0.6x multiplier · about 85% of official price\nOfficial direct access. GPT 5.5 can replace Opus 4.7 and is recommended for coding and high-volume agent work.',
+            multiplier: 0.6,
+            saving: 'About 85%'
+          }
+        ] satisfies PriceGroup[],
         models: [
           { id: 'gpt-5.5', input: 35, output: 210, cacheWrite: null, cacheRead: 3.5 },
           { id: 'gpt-5.4', input: 17.5, output: 105, cacheWrite: null, cacheRead: 1.75 },
@@ -312,10 +356,10 @@ const PriceCell = defineComponent({
 
       const groupPrice = (props.price * props.multiplier) / EXCHANGE_RATE
 
-      return h('div', { class: 'min-w-[172px]' }, [
-        h('div', { class: 'inline-flex max-w-full flex-wrap items-baseline gap-x-1 rounded-lg bg-primary-50 px-2.5 py-1 ring-1 ring-primary-100 dark:bg-primary-500/10 dark:ring-primary-400/20' }, [
-          h('span', { class: 'text-base font-bold tabular-nums text-primary-700 dark:text-primary-100' }, groupPrice.toFixed(2)),
-          h('span', { class: 'text-[11px] font-semibold text-primary-700/80 dark:text-primary-200/80' }, copy.value.table.balanceSuffix)
+      return h('div', { class: 'min-w-[140px]' }, [
+        h('p', { class: 'text-sm font-semibold text-gray-950 dark:text-white' }, [
+          h('span', { class: 'text-base font-bold tabular-nums text-primary-600 dark:text-primary-300' }, groupPrice.toFixed(2)),
+          h('span', { class: 'ml-1' }, copy.value.table.balanceSuffix)
         ]),
         h('p', { class: 'mt-1 text-xs text-gray-500 dark:text-dark-400' }, `${copy.value.table.officialPrefix} ￥${props.price.toFixed(2)}`)
       ])
@@ -327,15 +371,19 @@ const platforms = computed(() => [
   { id: 'openai' as const, ...copy.value.data.openai }
 ])
 const activePlatformData = computed(() => copy.value.data[activePlatform.value])
+const activeGroupData = computed(() => {
+  const selectedGroupId = selectedGroups.value[activePlatform.value]
+  return activePlatformData.value.groups.find((group) => group.id === selectedGroupId) ?? activePlatformData.value.groups[0]
+})
 const pricingRuleDescription = computed(() => {
   const model = activePlatformData.value.models[0]
-  const groupPrice = formatGroupPrice(model.input, activePlatformData.value.multiplier)
+  const groupPrice = formatGroupPrice(model.input, activeGroupData.value.multiplier)
 
   if (activeLocale.value === 'zh') {
-    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activePlatformData.value.groupName} ${groupPrice} ${copy.value.table.balanceSuffix}`
+    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activeGroupData.value.name} ${groupPrice} ${copy.value.table.balanceSuffix}`
   }
 
-  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activePlatformData.value.groupName} ${groupPrice} ${copy.value.table.balanceSuffix}`
+  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activeGroupData.value.name} ${groupPrice} ${copy.value.table.balanceSuffix}`
 })
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 
