@@ -23,7 +23,7 @@
           <h1 class="mt-6 max-w-3xl text-4xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-5xl lg:text-6xl">
             {{ copy.hero.title }}
           </h1>
-          <p class="mt-5 max-w-2xl text-base leading-8 text-gray-600 dark:text-dark-300 sm:text-lg">
+          <p class="mt-5 max-w-2xl text-base leading-8 text-gray-600 dark:text-dark-300 sm:text-lg whitespace-pre-line">
             {{ copy.hero.description }}
           </p>
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -66,25 +66,19 @@
                   <p class="mt-1 text-xs text-slate-400">{{ copy.panel.subtitle }}</p>
                 </div>
 
-                <div class="grid gap-2.5">
+                <div class="grid gap-2">
                   <div
                     v-for="(line, index) in terminalLines"
                     :key="`${line.text}-${index}`"
                     class="code-line"
                     :style="{ '--line-delay': `${index * 120}ms` }"
                   >
+                    <span v-if="line.prompt" class="code-prompt">$</span>
                     <span :class="line.className">{{ line.text }}</span>
                   </div>
-                </div>
-
-                <div class="mt-6 grid gap-3 border-t border-white/10 pt-4 sm:grid-cols-3">
-                  <div
-                    v-for="item in copy.panel.metrics"
-                    :key="item.label"
-                    class="rounded-xl border border-white/10 bg-white/[0.04] p-3"
-                  >
-                    <p class="text-[11px] text-slate-500">{{ item.label }}</p>
-                    <p class="mt-1 text-sm font-semibold text-slate-100">{{ item.value }}</p>
+                  <div class="code-line" :style="{ '--line-delay': `${terminalLines.length * 120}ms` }">
+                    <span class="code-prompt">$</span>
+                    <span class="cursor"></span>
                   </div>
                 </div>
               </div>
@@ -98,11 +92,9 @@
           <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
               <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.platforms.eyebrow }}</p>
-              <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.platforms.title }}</h2>
             </div>
-            <p class="text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.platforms.description }}</p>
           </div>
-          <div class="mt-8 grid gap-4 md:grid-cols-2">
+          <div class="mt-8 grid gap-4 md:grid-cols-3">
             <article
               v-for="platform in copy.platforms.items"
               :key="platform.name"
@@ -133,23 +125,10 @@
           <div>
             <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.pricing.eyebrow }}</p>
             <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.title }}</h2>
-            <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.description }}</p>
             <router-link to="/pricing" class="btn btn-primary btn-md mt-6">
               {{ copy.pricing.action }}
               <Icon name="arrowRight" size="sm" />
             </router-link>
-          </div>
-
-          <div class="card p-6">
-            <div class="flex items-start gap-4">
-              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-300">
-                <Icon name="creditCard" size="lg" />
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-gray-950 dark:text-white">{{ copy.pricing.cardTitle }}</h3>
-                <p class="mt-2 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.cardDescription }}</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -181,6 +160,8 @@ import MarketingFooter from '@/components/marketing/MarketingFooter.vue'
 import MarketingHeader from '@/components/marketing/MarketingHeader.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { useAppStore, useAuthStore } from '@/stores'
+import claudeLogo from '@/assets/icons/claude.svg'
+import openaiLogo from '@/assets/icons/openai.svg'
 
 const appStore = useAppStore()
 const authStore = useAuthStore()
@@ -194,43 +175,34 @@ const homeCopy = {
     pageTitle: '首页',
     hero: {
       badge: 'AI API 网关',
-      title: '统一接入 Claude 和 OpenAI 模型',
-      description: '使用一个 API 网关管理密钥、余额和模型调用，当前支持 Claude 与 OpenAI（GPT）两个平台。',
+      title: '接入全球顶尖模型',
+      description: '免翻墙直连、无封号风险、余额永不过期\n低延迟调用 Claude、ChatGPT 等主流模型',
       start: '立即开始',
       dashboard: '进入控制台',
       pricing: '查看模型',
       stats: [
         { value: '2', label: '支持平台' },
         { value: '7', label: '支持模型' },
-        { value: '1:1', label: '充值比例' }
+        { value: '1￥:1＄', label: '充值比例' }
       ]
     },
     panel: {
       title: '统一调用入口',
-      subtitle: 'Claude 与 OpenAI 模型集中接入',
+      subtitle: '全球顶尖模型集中接入',
       status: '在线',
-      metrics: [
-        { label: '平台', value: 'Claude / OpenAI' },
-        { label: '调用方式', value: 'API Key' },
-        { label: '余额', value: '美元余额' }
-      ]
     },
     platforms: {
       eyebrow: '支持平台',
-      title: '当前支持 Claude 和 OpenAI',
-      description: '页面只展示当前可用的平台与模型 ID。',
       items: [
-        { name: 'Claude', logo: '/claude.svg', models: claudeModels },
-        { name: 'OpenAI (GPT)', logo: '/openai.svg', models: openAiModels }
+        { name: 'Claude', logo: claudeLogo, models: claudeModels },
+        { name: 'OpenAI', logo: openaiLogo, models: openAiModels }
       ]
     },
     pricing: {
       eyebrow: '充值比例',
-      title: '充值 1 人民币得到 1 美元余额',
+      title: '充值 1RMB 得到 1USD 余额',
       description: '充值后的美元余额用于模型调用扣费。',
       action: '查看模型列表',
-      cardTitle: '余额规则',
-      cardDescription: '充值 1 人民币可得到 1 美元余额，当前不展示人民币模型单价。'
     },
     cta: {
       title: '开始使用支持的模型',
@@ -242,43 +214,34 @@ const homeCopy = {
     pageTitle: 'Home',
     hero: {
       badge: 'AI API Gateway',
-      title: 'Unified access to Claude and OpenAI models',
-      description: 'Use one API gateway to manage keys, balance, and model calls. Claude and OpenAI (GPT) are currently supported.',
+      title: 'Access to the World’s Leading AI Models',
+      description: 'Direct access without VPN, no account-ban risk, non-expiring balance\nlow-latency calls to mainstream models like Claude and ChatGPT.',
       start: 'Get started',
       dashboard: 'Dashboard',
       pricing: 'View models',
       stats: [
         { value: '2', label: 'Platforms' },
         { value: '7', label: 'Models' },
-        { value: '1:1', label: 'Top-up ratio' }
+        { value: '1￥:1＄', label: 'Top-up ratio' }
       ]
     },
     panel: {
       title: 'Unified endpoint',
-      subtitle: 'Centralized access to Claude and OpenAI models',
+      subtitle: 'Centralized access to World’s Leading AI Models',
       status: 'Online',
-      metrics: [
-        { label: 'Platforms', value: 'Claude / OpenAI' },
-        { label: 'Access', value: 'API Key' },
-        { label: 'Balance', value: 'USD balance' }
-      ]
     },
     platforms: {
       eyebrow: 'Supported platforms',
-      title: 'Claude and OpenAI are currently supported',
       description: 'Only currently available platforms and model IDs are shown.',
       items: [
-        { name: 'Claude', logo: '/claude.svg', models: claudeModels },
-        { name: 'OpenAI (GPT)', logo: '/openai.svg', models: openAiModels }
+        { name: 'Claude', logo: claudeLogo, models: claudeModels },
+        { name: 'OpenAI', logo: openaiLogo, models: openAiModels }
       ]
     },
     pricing: {
       eyebrow: 'Top-up ratio',
       title: '1 RMB top-up gives 1 USD balance',
-      description: 'Your USD balance is used for model usage billing.',
       action: 'View model list',
-      cardTitle: 'Balance rule',
-      cardDescription: 'A 1 RMB top-up gives 1 USD balance. RMB model unit prices are not shown.'
     },
     cta: {
       title: 'Start using supported models',
@@ -289,10 +252,12 @@ const homeCopy = {
 } as const
 
 const terminalLines = [
-  { text: 'export ANTHROPIC_BASE_URL="https://api.xiaobocode.com"', className: 'code-cmd' },
-  { text: 'export ANTHROPIC_AUTH_TOKEN="sk-....."', className: 'code-cmd' },
-  { text: 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1', className: 'code-muted' },
-  { text: 'claude', className: 'code-success' }
+  { prompt: true, text: 'export ANTHROPIC_BASE_URL="https://api.xiaobocode.com"', className: 'code-cmd' },
+  { prompt: false, text: 'set base_url', className: 'code-muted' },
+  { prompt: true, text: 'export ANTHROPIC_AUTH_TOKEN="sk-..."', className: 'code-cmd' },
+  { prompt: false, text: 'set api_key', className: 'code-muted' },
+  { prompt: true, text: 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1', className: 'code-cmd' },
+  { prompt: true, text: 'claude', className: 'code-success' },
 ] as const
 
 const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
@@ -415,6 +380,11 @@ watchEffect(() => {
   animation-delay: var(--line-delay, 0ms);
 }
 
+.code-prompt {
+  color: #86efac;
+  font-weight: 800;
+}
+
 .code-cmd {
   color: #e2e8f0;
 }
@@ -427,6 +397,15 @@ watchEffect(() => {
   color: #86efac;
 }
 
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 18px;
+  margin-top: 4px;
+  background: #86efac;
+  animation: blink 1s step-end infinite;
+}
+
 @keyframes line-appear {
   from {
     opacity: 0;
@@ -436,6 +415,18 @@ watchEffect(() => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
   }
 }
 

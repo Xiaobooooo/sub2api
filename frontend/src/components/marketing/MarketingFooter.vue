@@ -8,9 +8,6 @@
           </span>
           <span class="text-xl font-bold tracking-tight">{{ siteName }}</span>
         </router-link>
-        <p class="mt-4 max-w-md text-sm leading-7">
-          {{ copy.description }}
-        </p>
         <p class="mt-6 text-sm">&copy; {{ currentYear }} {{ siteName }}. {{ copy.rights }}</p>
       </div>
 
@@ -32,14 +29,6 @@
       <div>
         <h2 class="text-sm font-semibold text-gray-900 dark:text-white">{{ copy.resources }}</h2>
         <div class="mt-4 grid gap-3 text-sm">
-          <a
-            class="transition-colors hover:text-primary-600 dark:hover:text-primary-400"
-            href="https://github.com/Wei-Shaw/sub2api"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
           <a
             v-if="docUrl"
             class="transition-colors hover:text-primary-600 dark:hover:text-primary-400"
@@ -71,7 +60,6 @@ const { locale } = useI18n()
 
 const footerCopy = {
   zh: {
-    description: '将订阅、账号池、计费和模型路由收束到一个 API 网关，让团队用一把密钥稳定调用主流 AI 模型。',
     rights: '保留所有权利。',
     product: '产品',
     pricing: '模型价格',
@@ -82,7 +70,6 @@ const footerCopy = {
     faq: '常见问题'
   },
   en: {
-    description: 'Unify subscriptions, account pools, billing, and model routing behind one API gateway for stable access to mainstream AI models.',
     rights: 'All rights reserved.',
     product: 'Product',
     pricing: 'Pricing',
