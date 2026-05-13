@@ -6,16 +6,8 @@
         class="flex min-w-0 items-center gap-3 text-gray-900 dark:text-white"
         @click="mobileOpen = false"
       >
-        <span
-          class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-primary text-white shadow-glow"
-        >
-          <img
-            v-if="siteLogo"
-            :src="siteLogo"
-            alt="Logo"
-            class="h-full w-full object-contain"
-          />
-          <Icon v-else name="sparkles" size="md" />
+        <span class="sidebar-logo flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-glow">
+          <img :src="logoSrc" alt="Logo" class="h-full w-full object-contain" />
         </span>
         <span class="truncate text-xl font-bold tracking-tight">
           {{ siteName }}
@@ -127,8 +119,7 @@ const headerCopy = {
     nav: {
       home: '首页',
       pricing: '模型价格',
-      docs: '接入文档',
-      faq: '常见问题'
+      docs: '接入文档'
     },
     dashboard: '控制台',
     login: '登录',
@@ -140,8 +131,7 @@ const headerCopy = {
     nav: {
       home: 'Home',
       pricing: 'Pricing',
-      docs: 'Docs',
-      faq: 'FAQ'
+      docs: 'Docs'
     },
     dashboard: 'Dashboard',
     login: 'Login',
@@ -157,19 +147,16 @@ const copy = computed(() => headerCopy[activeLocale.value])
 const navItems = computed(() => [
   { label: copy.value.nav.home, to: '/home', path: '/home' },
   { label: copy.value.nav.pricing, to: '/pricing', path: '/pricing' },
-  { label: copy.value.nav.docs, to: '/docs', path: '/docs' },
-  { label: copy.value.nav.faq, to: { path: '/home', hash: '#faq' }, path: '/home#faq' }
+  { label: copy.value.nav.docs, to: '/docs', path: '/docs' }
 ])
 
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
+const logoSrc = computed(() => siteLogo.value || '/logo.png')
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const dashboardPath = computed(() => authStore.isAdmin ? '/admin/dashboard' : '/dashboard')
 
 function isActive(path: string): boolean {
-  if (path === '/home#faq') {
-    return route.path === '/home' && route.hash === '#faq'
-  }
   return route.path === path
 }
 
