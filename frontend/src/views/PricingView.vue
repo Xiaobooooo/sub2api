@@ -210,7 +210,7 @@ const pricingCopy = {
       cacheRead: '缓存读取',
       saving: '节省幅度',
       officialPrefix: '官方参考',
-      balanceSuffix: '美元余额 / 1M Tokens',
+      balanceSuffix: '/ 1M Tokens',
       notAvailable: '不适用',
       copyModel: '复制模型 ID'
     },
@@ -286,7 +286,7 @@ const pricingCopy = {
       cacheRead: 'Cache read',
       saving: 'Savings',
       officialPrefix: 'Official ref.',
-      balanceSuffix: 'USD balance / 1M Tokens',
+      balanceSuffix: '/ 1M Tokens',
       notAvailable: 'N/A',
       copyModel: 'Copy model ID'
     },
@@ -358,7 +358,7 @@ const PriceCell = defineComponent({
 
       return h('div', { class: 'min-w-[140px]' }, [
         h('p', { class: 'text-sm font-semibold text-gray-950 dark:text-white' }, [
-          h('span', { class: 'text-base font-bold tabular-nums text-primary-600 dark:text-primary-300' }, groupPrice.toFixed(2)),
+          h('span', { class: 'text-base font-bold tabular-nums text-primary-600 dark:text-primary-300' }, `￥ ${groupPrice.toFixed(2)}`),
           h('span', { class: 'ml-1' }, copy.value.table.balanceSuffix)
         ]),
         h('p', { class: 'mt-1 text-xs text-gray-500 dark:text-dark-400' }, `${copy.value.table.officialPrefix} ￥${props.price.toFixed(2)}`)
@@ -380,10 +380,10 @@ const pricingRuleDescription = computed(() => {
   const groupPrice = formatGroupPrice(model.input, activeGroupData.value.multiplier)
 
   if (activeLocale.value === 'zh') {
-    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activeGroupData.value.name} ${groupPrice} ${copy.value.table.balanceSuffix}`
+    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`
   }
 
-  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activeGroupData.value.name} ${groupPrice} ${copy.value.table.balanceSuffix}`
+  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`
 })
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 

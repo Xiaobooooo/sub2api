@@ -108,10 +108,12 @@
               :key="platform.name"
               class="card card-hover p-6"
             >
-              <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-gray-200 dark:bg-dark-800 dark:ring-dark-700">
-                <img :src="platform.logo" :alt="`${platform.name} logo`" class="h-full w-full object-contain" />
+              <div class="flex items-center gap-3">
+                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-gray-200 dark:bg-dark-800 dark:ring-dark-700">
+                  <img :src="platform.logo" :alt="`${platform.name} logo`" class="h-full w-full object-contain" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-950 dark:text-white">{{ platform.name }}</h3>
               </div>
-              <h3 class="mt-4 text-lg font-semibold text-gray-950 dark:text-white">{{ platform.name }}</h3>
               <div class="mt-4 flex flex-wrap gap-2">
                 <span
                   v-for="model in platform.models"
