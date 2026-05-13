@@ -48,40 +48,50 @@
         </div>
 
         <div class="flex items-center">
-          <div class="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-card dark:border-dark-700/50 dark:bg-dark-800/80">
-            <div class="flex items-center justify-between gap-4 border-b border-gray-100 pb-4 dark:border-dark-700">
-              <div>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ copy.panel.title }}</p>
-                <p class="mt-1 text-xs text-gray-500 dark:text-dark-400">{{ copy.panel.subtitle }}</p>
+          <div class="terminal-container w-full">
+            <div class="terminal-window">
+              <div class="terminal-header">
+                <div class="terminal-buttons" aria-hidden="true">
+                  <span class="btn-close"></span>
+                  <span class="btn-minimize"></span>
+                  <span class="btn-maximize"></span>
+                </div>
+                <span class="terminal-title">api-gateway</span>
+                <span class="terminal-status">{{ copy.panel.status }}</span>
               </div>
-              <span class="badge badge-success">{{ copy.panel.status }}</span>
-            </div>
 
-            <div class="relative my-8 min-h-[260px] rounded-2xl bg-gray-50 p-5 dark:bg-dark-900/70">
-              <div class="absolute inset-10 rounded-full border border-dashed border-primary-300/60 dark:border-primary-700/60"></div>
-              <div class="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-2xl bg-gradient-primary text-white shadow-glow">
-                <Icon name="server" size="lg" />
-                <span class="mt-2 text-xs font-semibold">API</span>
-              </div>
-              <div
-                v-for="node in modelNodes"
-                :key="node.name"
-                class="absolute flex min-w-[132px] items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm dark:border-dark-700 dark:bg-dark-800 dark:text-gray-100"
-                :class="node.position"
-              >
-                <Icon :name="node.icon" size="sm" class="text-primary-500" />
-                {{ node.name }}
-              </div>
-            </div>
+              <div class="terminal-body">
+                <div class="mb-5 border-b border-white/10 pb-4">
+                  <p class="text-sm font-semibold text-white">{{ copy.panel.title }}</p>
+                  <p class="mt-1 text-xs text-slate-400">{{ copy.panel.subtitle }}</p>
+                </div>
 
-            <div class="grid gap-3 sm:grid-cols-3">
-              <div
-                v-for="item in copy.panel.metrics"
-                :key="item.label"
-                class="rounded-xl bg-gray-50 p-3 dark:bg-dark-900/70"
-              >
-                <p class="text-xs text-gray-500 dark:text-dark-400">{{ item.label }}</p>
-                <p class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ item.value }}</p>
+                <div class="grid gap-2.5">
+                  <div
+                    v-for="(line, index) in terminalLines"
+                    :key="`${line.text}-${index}`"
+                    class="code-line"
+                    :style="{ '--line-delay': `${index * 120}ms` }"
+                  >
+                    <span v-if="line.prompt" class="code-prompt">$</span>
+                    <span :class="line.className">{{ line.text }}</span>
+                  </div>
+                  <div class="code-line" :style="{ '--line-delay': `${terminalLines.length * 120}ms` }">
+                    <span class="code-prompt">$</span>
+                    <span class="cursor"></span>
+                  </div>
+                </div>
+
+                <div class="mt-6 grid gap-3 border-t border-white/10 pt-4 sm:grid-cols-3">
+                  <div
+                    v-for="item in copy.panel.metrics"
+                    :key="item.label"
+                    class="rounded-xl border border-white/10 bg-white/[0.04] p-3"
+                  >
+                    <p class="text-[11px] text-slate-500">{{ item.label }}</p>
+                    <p class="mt-1 text-sm font-semibold text-slate-100">{{ item.value }}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -271,7 +281,7 @@ const homeCopy = {
       description: 'Your USD balance is used for model usage billing.',
       action: 'View model list',
       cardTitle: 'Balance rule',
-      cardDescription: 'A 1 RMB top-up gives 1 USD balance. The frontend does not show RMB model unit prices.'
+      cardDescription: 'A 1 RMB top-up gives 1 USD balance. RMB model unit prices are not shown.'
     },
     cta: {
       title: 'Start using supported models',
@@ -281,9 +291,13 @@ const homeCopy = {
   }
 } as const
 
-const modelNodes = [
-  { name: 'Claude', icon: 'beaker', position: 'left-6 top-10' },
-  { name: 'OpenAI (GPT)', icon: 'cpu', position: 'bottom-10 right-6' }
+const terminalLines = [
+  { prompt: true, text: 'sub2api models --platform claude,openai', className: 'code-cmd' },
+  { prompt: false, text: 'claude-opus-4-7  claude-sonnet-4-6  gpt-5.5', className: 'code-muted' },
+  { prompt: true, text: 'curl -X POST /v1/chat/completions -m gpt-5.5', className: 'code-cmd' },
+  { prompt: false, text: '200 OK  routed=OpenAI(GPT)  balance=USD', className: 'code-success' },
+  { prompt: true, text: 'claude --model claude-haiku-4-5', className: 'code-cmd' },
+  { prompt: false, text: '200 OK  routed=Claude  key=active', className: 'code-success' }
 ] as const
 
 const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
@@ -307,3 +321,170 @@ watchEffect(() => {
   document.title = `${copy.value.pageTitle} - ${siteName.value}`
 })
 </script>
+
+<style scoped>
+.terminal-container {
+  display: flex;
+  justify-content: center;
+}
+
+.terminal-window {
+  width: min(100%, 560px);
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(204, 120, 92, 0.2), transparent 30%),
+    linear-gradient(145deg, #172033 0%, #0b1020 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 28px 70px -28px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(204, 120, 92, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: perspective(1200px) rotateX(2deg) rotateY(-2deg);
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.terminal-window:hover {
+  transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(-4px);
+  box-shadow:
+    0 32px 78px -30px rgba(0, 0, 0, 0.8),
+    0 0 42px rgba(204, 120, 92, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.terminal-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: rgba(8, 12, 24, 0.56);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-buttons span {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+}
+
+.btn-close {
+  background: #ef4444;
+}
+
+.btn-minimize {
+  background: #eab308;
+}
+
+.btn-maximize {
+  background: #22c55e;
+}
+
+.terminal-title {
+  min-width: 0;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.terminal-status {
+  border-radius: 9999px;
+  background: rgba(34, 197, 94, 0.12);
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #86efac;
+}
+
+.terminal-body {
+  padding: 22px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.code-line {
+  display: flex;
+  min-height: 25px;
+  align-items: flex-start;
+  gap: 8px;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: line-appear 420ms ease forwards;
+  animation-delay: var(--line-delay, 0ms);
+}
+
+.code-prompt {
+  color: #86efac;
+  font-weight: 800;
+}
+
+.code-cmd {
+  color: #e2e8f0;
+}
+
+.code-muted {
+  color: #94a3b8;
+}
+
+.code-success {
+  color: #86efac;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 18px;
+  margin-top: 4px;
+  background: #86efac;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes line-appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .terminal-window {
+    transform: none;
+  }
+
+  .terminal-window:hover {
+    transform: translateY(-2px);
+  }
+
+  .terminal-body {
+    padding: 18px;
+  }
+
+  .code-line {
+    font-size: 12px;
+  }
+}
+</style>

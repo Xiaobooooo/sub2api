@@ -3,16 +3,8 @@
     <div class="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
         <router-link to="/home" class="inline-flex items-center gap-3 text-gray-900 dark:text-white">
-          <span
-            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-primary text-white shadow-glow"
-          >
-            <img
-              v-if="siteLogo"
-              :src="siteLogo"
-              alt="Logo"
-              class="h-full w-full object-contain"
-            />
-            <Icon v-else name="sparkles" size="md" />
+          <span class="sidebar-logo flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-glow">
+            <img :src="logoSrc" alt="Logo" class="h-full w-full object-contain" />
           </span>
           <span class="text-xl font-bold tracking-tight">{{ siteName }}</span>
         </router-link>
@@ -72,7 +64,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Icon from '@/components/icons/Icon.vue'
 import { useAppStore } from '@/stores'
 
 const appStore = useAppStore()
@@ -107,6 +98,7 @@ const activeLocale = computed(() => locale.value === 'zh' ? 'zh' : 'en')
 const copy = computed(() => footerCopy[activeLocale.value])
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
 const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
+const logoSrc = computed(() => siteLogo.value || '/logo.png')
 const docUrl = computed(() => appStore.cachedPublicSettings?.doc_url || appStore.docUrl || '')
 const currentYear = computed(() => new Date().getFullYear())
 </script>
