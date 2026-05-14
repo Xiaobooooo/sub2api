@@ -119,7 +119,7 @@
                 >{{ copy.script.baseUrl }}</span
               >
               <code
-                class="rounded bg-white px-2 py-1 font-mono text-primary-700 dark:bg-dark-800 dark:text-primary-300"
+                class="break-all rounded bg-white px-2 py-1 font-mono text-primary-700 dark:bg-dark-800 dark:text-primary-300"
                 >{{ activeDocData.baseUrl }}</code
               >
             </div>
@@ -186,7 +186,7 @@ import codexLogo from "@/assets/icons/codex.svg";
 import hermesAgentLogo from "@/assets/icons/hermesagent.svg";
 import openclawLogo from "@/assets/icons/openclaw.svg";
 
-type DocId = "claude" | "openai"| "openclaw"| "hermes";
+type DocId = "claude" | "openai" | "openclaw" | "hermes";
 type PlatformId = "windows" | "unix";
 
 const { locale } = useI18n();
@@ -194,6 +194,167 @@ const appStore = useAppStore();
 const activeDoc = ref<DocId>("openai");
 const activePlatform = ref<PlatformId>("windows");
 const copied = ref(false);
+
+const CLAUDE_BASE_URL = "https://api.xiaobocode.com";
+const OPENAI_BASE_URL = "https://api.xiaobocode.com/v1";
+const API_KEY_PLACEHOLDER = "sk-...";
+const CLAUDE_MODELS =
+  "claude-opus-4-7, claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5";
+const OPENAI_MODELS = "gpt-5.5, gpt-5.4, gpt-5.3-codex";
+
+const claudeCodeCommands = {
+  windows: `[System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "${CLAUDE_BASE_URL}", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", "${API_KEY_PLACEHOLDER}", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC", "1", [System.EnvironmentVariableTarget]::User)
+
+claude`,
+  unix: `export ANTHROPIC_BASE_URL="${CLAUDE_BASE_URL}"
+export ANTHROPIC_AUTH_TOKEN="${API_KEY_PLACEHOLDER}"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+claude`,
+} as const;
+
+const codexCommands = {
+  windows: `$codexDir = Join-Path $env:USERPROFILE ".codex"
+New-Item -ItemType Directory -Force -Path $codexDir | Out-Null
+
+@"
+model_provider = "OpenAI"
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "high"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = 270000
+model_auto_compact_token_limit = 270000
+effective_context_window_percent = 95
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "${OPENAI_BASE_URL}"
+wire_api = "responses"
+requires_openai_auth = true
+"@ | Set-Content -Path (Join-Path $codexDir "config.toml") -Encoding UTF8
+
+@"
+{
+  "OPENAI_API_KEY": "${API_KEY_PLACEHOLDER}"
+}
+"@ | Set-Content -Path (Join-Path $codexDir "auth.json") -Encoding UTF8
+
+codex`,
+  unix: `mkdir -p ~/.codex
+
+cat > ~/.codex/config.toml << 'EOF'
+model_provider = "OpenAI"
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "high"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = 270000
+model_auto_compact_token_limit = 270000
+effective_context_window_percent = 95
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "${OPENAI_BASE_URL}"
+wire_api = "responses"
+requires_openai_auth = true
+EOF
+
+cat > ~/.codex/auth.json << 'EOF'
+{
+  "OPENAI_API_KEY": "${API_KEY_PLACEHOLDER}"
+}
+EOF
+
+codex`,
+} as const;
+
+const openClawCommands = {
+  windows: `npm install -g @openclaw/cli
+
+$env:ANTHROPIC_API_KEY="${API_KEY_PLACEHOLDER}"
+openclaw onboard --auth-choice custom-api-key --custom-base-url ${CLAUDE_BASE_URL} --custom-api-key-env ANTHROPIC_API_KEY --custom-compatibility anthropic --custom-model claude-opus-4-6
+
+$env:OPENAI_API_KEY="${API_KEY_PLACEHOLDER}"
+openclaw onboard --auth-choice custom-api-key --custom-base-url ${OPENAI_BASE_URL} --custom-api-key-env OPENAI_API_KEY --custom-compatibility openai --custom-model gpt-5.5
+
+openclaw`,
+  unix: `npm install -g @openclaw/cli
+
+export ANTHROPIC_API_KEY="${API_KEY_PLACEHOLDER}"
+openclaw onboard --auth-choice custom-api-key \\
+  --custom-base-url ${CLAUDE_BASE_URL} \\
+  --custom-api-key-env ANTHROPIC_API_KEY \\
+  --custom-compatibility anthropic \\
+  --custom-model claude-opus-4-6
+
+export OPENAI_API_KEY="${API_KEY_PLACEHOLDER}"
+openclaw onboard --auth-choice custom-api-key \\
+  --custom-base-url ${OPENAI_BASE_URL} \\
+  --custom-api-key-env OPENAI_API_KEY \\
+  --custom-compatibility openai \\
+  --custom-model gpt-5.5
+
+openclaw`,
+} as const;
+
+const hermesCommands = {
+  windows: `$hermesDir = Join-Path $env:USERPROFILE ".hermes"
+New-Item -ItemType Directory -Force -Path $hermesDir | Out-Null
+
+@"
+model:
+  default: claude-opus-4-7
+  provider: xiaobocode-claude
+providers:
+  xiaobocode-claude:
+    api_mode: anthropic_messages
+    base_url: ${CLAUDE_BASE_URL}
+    api_key: ${API_KEY_PLACEHOLDER}
+    default_model: claude-opus-4-7
+    models:
+      - claude-opus-4-7
+  xiaobocode-openai:
+    api_mode: openai_responses
+    base_url: ${OPENAI_BASE_URL}
+    api_key: ${API_KEY_PLACEHOLDER}
+    default_model: gpt-5.5
+    models:
+      - gpt-5.5
+"@ | Set-Content -Path (Join-Path $hermesDir "config.yaml") -Encoding UTF8
+
+hermes`,
+  unix: `mkdir -p ~/.hermes
+
+cat > ~/.hermes/config.yaml << 'EOF'
+model:
+  default: claude-opus-4-7
+  provider: xiaobocode-claude
+providers:
+  xiaobocode-claude:
+    api_mode: anthropic_messages
+    base_url: https://api.xiaobocode.com
+    api_key: sk-...
+    default_model: claude-opus-4-7
+    models:
+      - claude-opus-4-7
+  xiaobocode-openai:
+    api_mode: openai_responses
+    base_url: https://api.xiaobocode.com/v1
+    api_key: sk-...
+    default_model: gpt-5.5
+    models:
+      - gpt-5.5
+EOF
+
+hermes`,
+} as const;
 
 const docsCopy = {
   zh: {
@@ -205,12 +366,13 @@ const docsCopy = {
       badge: "接入文档",
     },
     script: {
-      title: "配置命令",
+      title: "手动配置命令",
       baseUrl: "Base URL：",
     },
     cta: {
       title: "已经创建好 API Key？",
-      description: "进入控制台创建或复制密钥，再按本页命令写入客户端配置。",
+      description:
+        "进入控制台创建或复制密钥，再按本页命令写入对应客户端配置。",
       action: "进入控制台",
     },
     copy: "复制",
@@ -222,124 +384,109 @@ const docsCopy = {
     docs: {
       claude: {
         shortTitle: "Claude Code",
-        title: "Claude 接入",
-        description: "使用 Claude 兼容配置调用当前支持的 Claude 模型。",
-        modelHint:
-          "支持模型：claude-opus-4-7、claude-opus-4-6、claude-sonnet-4-6、claude-haiku-4-5",
+        title: "Claude Code 配置教程",
+        description:
+          "为 Claude Code 写入 Anthropic 兼容地址和密钥，直接调用当前支持的 Claude 模型。",
+        modelHint: `支持模型：${CLAUDE_MODELS}`,
         logo: claudeCodeLogo,
-        baseUrl: "https://api.xiaobocode.com",
-        commands: {
-          windows:
-            '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-          unix: 'export ANTHROPIC_API_KEY="sk-..."\nexport ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-        },
+        baseUrl: CLAUDE_BASE_URL,
+        commands: claudeCodeCommands,
         steps: [
           {
             icon: "key",
             title: "创建密钥",
-            description: "在控制台创建 API Key。",
+            description: "在控制台创建 API Key，并替换命令中的 sk-...。",
           },
           {
             icon: "link",
             title: "配置地址",
-            description: "使用 Claude 兼容 Base URL。",
+            description: "Claude Code 使用根地址，不需要添加 /v1。",
           },
           {
             icon: "checkCircle",
-            title: "选择模型",
-            description: "从支持的 Claude 模型中选择一个模型 ID。",
+            title: "重启终端",
+            description: "Windows 写入用户环境变量后，重新打开终端再运行 claude。",
           },
         ],
       },
       openai: {
         shortTitle: "Codex",
-        title: "Codex 接入",
-        description: "使用 OpenAI 兼容协议调用当前支持的 GPT 模型。",
-        modelHint: "支持模型：gpt-5.5、gpt-5.4、gpt-5.3-codex",
+        title: "Codex 配置教程",
+        description:
+          "为 Codex 写入 OpenAI Responses 兼容配置，使用当前支持的 GPT 模型。",
+        modelHint: `支持模型：${OPENAI_MODELS}`,
         logo: codexLogo,
-        baseUrl: "https://api.xiaobocode.com/v1",
-        commands: {
-          windows:
-            '$env:OPENAI_API_KEY="sk-..."\n$env:OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-          unix: 'export OPENAI_API_KEY="sk-..."\nexport OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-        },
+        baseUrl: OPENAI_BASE_URL,
+        commands: codexCommands,
         steps: [
           {
             icon: "key",
             title: "创建密钥",
-            description: "在控制台创建 API Key。",
+            description: "在控制台创建 API Key，并写入 auth.json。",
           },
           {
             icon: "link",
-            title: "配置地址",
-            description: "使用 OpenAI 兼容 Base URL。",
+            title: "创建配置",
+            description: "Codex 需要同时写入 config.toml 和 auth.json。",
           },
           {
             icon: "checkCircle",
-            title: "选择模型",
-            description: "从支持的 GPT 模型中选择一个模型 ID。",
+            title: "开始使用",
+            description: "进入项目目录后运行 codex。",
           },
         ],
       },
       openclaw: {
-        shortTitle: "Openclaw",
-        title: "Openclaw 接入",
-        description: "使用 Claude 兼容配置调用当前支持的 Claude 模型。",
-        modelHint:
-          "支持模型：claude-opus-4-7、claude-opus-4-6、claude-sonnet-4-6、claude-haiku-4-5",
+        shortTitle: "OpenClaw",
+        title: "OpenClaw 配置教程",
+        description:
+          "通过 OpenClaw 自定义 API Key 接入，可按需选择 Claude 或 OpenAI 通道。",
+        modelHint: `Claude：${CLAUDE_MODELS}；OpenAI：${OPENAI_MODELS}`,
         logo: openclawLogo,
-        baseUrl: "https://api.xiaobocode.com",
-        commands: {
-          windows:
-            '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-          unix: 'export ANTHROPIC_API_KEY="sk-..."\nexport ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-        },
+        baseUrl: `Claude ${CLAUDE_BASE_URL} · OpenAI ${OPENAI_BASE_URL}`,
+        commands: openClawCommands,
         steps: [
           {
             icon: "key",
-            title: "创建密钥",
-            description: "在控制台创建 API Key。",
+            title: "安装 CLI",
+            description: "先安装 @openclaw/cli，再执行 onboard 配置。",
           },
           {
             icon: "link",
-            title: "配置地址",
-            description: "使用 Claude 兼容 Base URL。",
+            title: "选择通道",
+            description: "Claude 通道使用根地址，OpenAI 通道必须带 /v1。",
           },
           {
             icon: "checkCircle",
-            title: "选择模型",
-            description: "从支持的 Claude 模型中选择一个模型 ID。",
+            title: "开始使用",
+            description: "配置完成后运行 openclaw。",
           },
         ],
       },
       hermes: {
         shortTitle: "Hermes",
-        title: "Hermes 接入",
-        description: "使用 Claude 兼容配置调用当前支持的 Claude 模型。",
-        modelHint:
-          "支持模型：claude-opus-4-7、claude-opus-4-6、claude-sonnet-4-6、claude-haiku-4-5",
+        title: "Hermes 配置教程",
+        description:
+          "为 Hermes 写入 config.yaml，同时保留 Claude 与 OpenAI 两个 provider。",
+        modelHint: `Claude：${CLAUDE_MODELS}；OpenAI：${OPENAI_MODELS}`,
         logo: hermesAgentLogo,
-        baseUrl: "https://api.xiaobocode.com",
-        commands: {
-          windows:
-            '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-          unix: 'export ANTHROPIC_API_KEY="sk-..."\nexport ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-        },
+        baseUrl: `Claude ${CLAUDE_BASE_URL} · OpenAI ${OPENAI_BASE_URL}`,
+        commands: hermesCommands,
         steps: [
           {
             icon: "key",
-            title: "创建密钥",
-            description: "在控制台创建 API Key。",
+            title: "创建配置",
+            description: "在用户目录写入 ~/.hermes/config.yaml。",
           },
           {
             icon: "link",
-            title: "配置地址",
-            description: "使用 Claude 兼容 Base URL。",
+            title: "保留双通道",
+            description: "Claude 使用根地址，OpenAI 使用 /v1 地址。",
           },
           {
             icon: "checkCircle",
-            title: "选择模型",
-            description: "从支持的 Claude 模型中选择一个模型 ID。",
+            title: "开始使用",
+            description: "配置完成后运行 hermes。",
           },
         ],
       },
@@ -354,7 +501,7 @@ const docsCopy = {
       badge: "Integration docs",
     },
     script: {
-      title: "Configuration command",
+      title: "Manual configuration commands",
       baseUrl: "Base URL: ",
     },
     cta: {
@@ -372,127 +519,109 @@ const docsCopy = {
     docs: {
       claude: {
         shortTitle: "Claude Code",
-        title: "Claude Code Integration",
+        title: "Claude Code Configuration",
         description:
-          "Use Claude-compatible settings to call supported Claude models.",
-        modelHint:
-          "Supported models: claude-opus-4-7, claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5",
+          "Set the Anthropic-compatible endpoint and key for Claude Code.",
+        modelHint: `Supported models: ${CLAUDE_MODELS}`,
         logo: claudeCodeLogo,
-        baseUrl: "https://api.xiaobocode.com",
-        commands: {
-          windows:
-            '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-          unix: 'export ANTHROPIC_API_KEY="sk-..."\nexport ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-        },
+        baseUrl: CLAUDE_BASE_URL,
+        commands: claudeCodeCommands,
         steps: [
           {
             icon: "key",
             title: "Create key",
-            description: "Create an API key in the dashboard.",
+            description: "Create an API key in the dashboard and replace sk-....",
           },
           {
             icon: "link",
             title: "Set endpoint",
-            description: "Use the Claude-compatible Base URL.",
+            description: "Claude Code uses the root URL without /v1.",
           },
           {
             icon: "checkCircle",
-            title: "Choose model",
-            description: "Choose one supported Claude model ID.",
+            title: "Restart terminal",
+            description: "On Windows, reopen the terminal after writing user env vars.",
           },
         ],
       },
       openai: {
         shortTitle: "Codex",
-        title: "Codex Integration",
+        title: "Codex Configuration",
         description:
-          "Use the OpenAI-compatible protocol to call supported GPT models.",
-        modelHint: "Supported models: gpt-5.5, gpt-5.4, gpt-5.3-codex",
+          "Write OpenAI Responses-compatible settings for supported GPT models.",
+        modelHint: `Supported models: ${OPENAI_MODELS}`,
         logo: codexLogo,
-        baseUrl: "https://api.xiaobocode.com/v1",
-        commands: {
-          windows:
-            '$env:OPENAI_API_KEY="sk-..."\n$env:OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-          unix: 'export OPENAI_API_KEY="sk-..."\nexport OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-        },
+        baseUrl: OPENAI_BASE_URL,
+        commands: codexCommands,
         steps: [
           {
             icon: "key",
             title: "Create key",
-            description: "Create an API key in the dashboard.",
+            description: "Create an API key and write it to auth.json.",
           },
           {
             icon: "link",
-            title: "Set endpoint",
-            description: "Use the OpenAI-compatible Base URL.",
+            title: "Create config",
+            description: "Codex needs both config.toml and auth.json.",
           },
           {
             icon: "checkCircle",
-            title: "Choose model",
-            description: "Choose one supported GPT model ID.",
+            title: "Start using",
+            description: "Run codex from your project directory.",
           },
         ],
       },
       openclaw: {
-        shortTitle: "Openclaw",
-        title: "Openclaw Integration",
+        shortTitle: "OpenClaw",
+        title: "OpenClaw Configuration",
         description:
-          "Use the OpenAI-compatible protocol to call supported GPT models.",
-        modelHint: "Supported models: gpt-5.5, gpt-5.4, gpt-5.3-codex",
+          "Connect OpenClaw through a custom API key using Claude or OpenAI mode.",
+        modelHint: `Claude: ${CLAUDE_MODELS}; OpenAI: ${OPENAI_MODELS}`,
         logo: openclawLogo,
-        baseUrl: "https://api.xiaobocode.com/v1",
-        commands: {
-          windows:
-            '$env:OPENAI_API_KEY="sk-..."\n$env:OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-          unix: 'export OPENAI_API_KEY="sk-..."\nexport OPENAI_BASE_URL="https://api.xiaobocode.com/v1"\n# model: gpt-5.5 / gpt-5.4 / gpt-5.3-codex',
-        },
+        baseUrl: `Claude ${CLAUDE_BASE_URL} · OpenAI ${OPENAI_BASE_URL}`,
+        commands: openClawCommands,
         steps: [
           {
             icon: "key",
-            title: "Create key",
-            description: "Create an API key in the dashboard.",
+            title: "Install CLI",
+            description: "Install @openclaw/cli before running onboard.",
           },
           {
             icon: "link",
-            title: "Set endpoint",
-            description: "Use the OpenAI-compatible Base URL.",
+            title: "Choose channel",
+            description: "Claude uses the root URL; OpenAI requires /v1.",
           },
           {
             icon: "checkCircle",
-            title: "Choose model",
-            description: "Choose one supported GPT model ID.",
+            title: "Start using",
+            description: "Run openclaw after configuration.",
           },
         ],
       },
       hermes: {
         shortTitle: "Hermes",
-        title: "Hermes Integration",
+        title: "Hermes Configuration",
         description:
-          "Use Claude-compatible settings to call supported Claude models.",
-        modelHint:
-          "Supported models: claude-opus-4-7, claude-opus-4-6, claude-sonnet-4-6, claude-haiku-4-5",
+          "Write config.yaml with Claude and OpenAI providers for Hermes.",
+        modelHint: `Claude: ${CLAUDE_MODELS}; OpenAI: ${OPENAI_MODELS}`,
         logo: hermesAgentLogo,
-        baseUrl: "https://api.xiaobocode.com",
-        commands: {
-          windows:
-            '$env:ANTHROPIC_API_KEY="sk-..."\n$env:ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-          unix: 'export ANTHROPIC_API_KEY="sk-..."\nexport ANTHROPIC_BASE_URL="https://api.xiaobocode.com"\n# model: claude-opus-4-7 / claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5',
-        },
+        baseUrl: `Claude ${CLAUDE_BASE_URL} · OpenAI ${OPENAI_BASE_URL}`,
+        commands: hermesCommands,
         steps: [
           {
             icon: "key",
-            title: "Create key",
-            description: "Create an API key in the dashboard.",
+            title: "Create config",
+            description: "Write ~/.hermes/config.yaml.",
           },
           {
             icon: "link",
-            title: "Set endpoint",
-            description: "Use the Claude-compatible Base URL.",
+            title: "Keep both channels",
+            description: "Claude uses the root URL; OpenAI uses /v1.",
           },
           {
             icon: "checkCircle",
-            title: "Choose model",
-            description: "Choose one supported Claude model ID.",
+            title: "Start using",
+            description: "Run hermes after configuration.",
           },
         ],
       },
