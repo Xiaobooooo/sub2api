@@ -1905,6 +1905,10 @@ async function copyCodeBlock(event: MouseEvent): Promise<void> {
   color: rgb(17 24 39);
 }
 
+.dark .docs-content :deep(.faq-q) {
+  color: rgb(243 244 246);
+}
+
 .docs-content :deep(.faq-q::-webkit-details-marker) {
   display: none;
 }
