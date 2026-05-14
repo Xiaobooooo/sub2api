@@ -38,84 +38,7 @@
       </aside>
 
       <section class="min-w-0">
-        <article
-          class="card docs-content overflow-hidden p-6 sm:p-8"
-          @click="handleContentClick"
-          @keydown="handleContentKeydown"
-          v-html="documentHtml"
-        ></article>
-      </section>
-    </main>
-
-    <MarketingFooter />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { computed, watchEffect } from "vue";
-import MarketingFooter from "@/components/marketing/MarketingFooter.vue";
-import MarketingHeader from "@/components/marketing/MarketingHeader.vue";
-import { useAppStore } from "@/stores";
-
-const appStore = useAppStore();
-
-const navGroups = [
-  {
-    title: "入门",
-    items: [
-      { id: "overview", title: "平台概述" },
-      { id: "quickstart", title: "快速开始" },
-    ],
-  },
-  {
-    title: "接入指南",
-    items: [
-      { id: "api-basics", title: "API 基础信息" },
-      { id: "models", title: "支持的模型" },
-      { id: "request-format", title: "请求格式" },
-      { id: "response-format", title: "响应格式" },
-      { id: "error-codes", title: "错误码说明" },
-    ],
-  },
-  {
-    title: "计费",
-    items: [
-      { id: "pricing", title: "计费说明" },
-      { id: "pricing-compare", title: "套餐对比" },
-    ],
-  },
-  {
-    title: "代码示例",
-    items: [
-      { id: "example-python", title: "Python" },
-      { id: "example-nodejs", title: "Node.js" },
-      { id: "example-curl", title: "cURL" },
-      { id: "example-stream", title: "流式输出" },
-    ],
-  },
-  {
-    title: "进阶",
-    items: [
-      { id: "claude-code", title: "Claude Code 接入" },
-      { id: "vscode", title: "VS Code 插件" },
-      { id: "jetbrains", title: "JetBrains 插件" },
-      { id: "cherry-studio", title: "Cherry Studio" },
-      { id: "chatbox", title: "ChatBox" },
-      { id: "lobechat", title: "LobeChat" },
-      { id: "more-clients", title: "更多客户端" },
-    ],
-  },
-  {
-    title: "帮助",
-    items: [
-      { id: "redeem", title: "兑换码" },
-      { id: "faq", title: "常见问题" },
-      { id: "contact", title: "联系我们" },
-    ],
-  },
-] as const;
-
-const documentHtml = String.raw`
+        <article class="card docs-content overflow-hidden p-6 sm:p-8">
 <section id="overview">
     <h2>
       <span class="hero-badge">开发者文档 v1.0</span>
@@ -174,7 +97,7 @@ const documentHtml = String.raw`
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
-            <button type="button" class="copy-btn" data-copy-code>复制</button>
+            <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
           </div>
 <pre><code><span class="var">curl</span> https://api.xiaobocode.com/v1/chat/completions \
   <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
@@ -217,7 +140,7 @@ const documentHtml = String.raw`
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">http header</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>Authorization: Bearer sk-YOUR_API_KEY</code></pre>
     </div>
@@ -437,7 +360,7 @@ const documentHtml = String.raw`
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">json</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>{
   <span class="prop">"model"</span>: <span class="str">"gpt-5.5"</span>,
@@ -466,7 +389,7 @@ const documentHtml = String.raw`
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="var">curl</span> https://api.xiaobocode.com/v1/images/generations \
   <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
@@ -489,7 +412,7 @@ const documentHtml = String.raw`
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">json</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>{
   <span class="prop">"id"</span>: <span class="str">"chatcmpl-abc123def456"</span>,
@@ -519,7 +442,7 @@ const documentHtml = String.raw`
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">text</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
 
@@ -539,7 +462,7 @@ data: [DONE]</code></pre>
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">json</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>{
   <span class="prop">"error"</span>: {
@@ -722,7 +645,7 @@ data: [DONE]</code></pre>
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>pip install openai</code></pre>
     </div>
@@ -730,7 +653,7 @@ data: [DONE]</code></pre>
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">python</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
 
@@ -759,7 +682,7 @@ response = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code>npm install openai</code></pre>
     </div>
@@ -767,7 +690,7 @@ response = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">javascript</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="kw">import</span> OpenAI <span class="kw">from</span> <span class="str">'openai'</span>;
 
@@ -799,7 +722,7 @@ response = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="var">curl</span> -X POST https://api.xiaobocode.com/v1/chat/completions \
   <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
@@ -823,7 +746,7 @@ response = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">python</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
 
@@ -851,7 +774,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">javascript</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="kw">import</span> OpenAI <span class="kw">from</span> <span class="str">'openai'</span>;
 
@@ -886,7 +809,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="var">curl</span> -X POST https://api.xiaobocode.com/v1/chat/completions \
   <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
@@ -914,7 +837,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="cm"># 将以下内容添加到 ~/.bashrc 或 ~/.zshrc</span>
 <span class="kw">export</span> <span class="var">ANTHROPIC_BASE_URL</span>=<span class="str">"https://api.xiaobocode.com"</span>
@@ -928,7 +851,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">powershell</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="cm"># 临时设置（当前会话有效）</span>
 <span class="var">$env:ANTHROPIC_BASE_URL</span> = <span class="str">"https://api.xiaobocode.com"</span>
@@ -943,7 +866,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">cmd</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="cm">:: 永久设置</span>
 <span class="kw">setx</span> <span class="var">ANTHROPIC_BASE_URL</span> <span class="str">"https://api.xiaobocode.com"</span>
@@ -955,7 +878,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
     <div class="code-block">
       <div class="code-header">
         <span class="code-lang">bash</span>
-        <button type="button" class="copy-btn" data-copy-code>复制</button>
+        <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
       </div>
 <pre><code><span class="cm"># 启动 Claude Code</span>
 <span class="var">claude</span>
@@ -1000,7 +923,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">json</span>
-            <button type="button" class="copy-btn" data-copy-code>复制</button>
+            <button type="button" class="copy-btn" @click="copyCodeBlock">复制</button>
           </div>
 <pre><code>{
   <span class="str">"models"</span>: [
@@ -1163,85 +1086,6 @@ stream = client.chat.completions.<span class="fn">create</span>(
     </div>
   </section>
 
-  <!-- ChatBox -->
-  <section id="chatbox">
-    <h2>ChatBox 接入</h2>
-    <p>ChatBox 是一款优秀的跨平台 AI 桌面客户端，支持 Windows、macOS、Linux 以及 iOS 和 Android 移动端，界面简洁易用。</p>
-
-    <div class="steps">
-      <div class="step">
-        <h4>下载安装</h4>
-        <p>前往 <a href="https://chatboxai.app" target="_blank" rel="noreferrer">ChatBox 官网</a> 下载对应平台的客户端，安装后打开应用。</p>
-      </div>
-      <div class="step">
-        <h4>配置 AI 提供商</h4>
-        <p>打开 ChatBox，进入 <strong>设置</strong> &rarr; <strong>AI 模型提供商</strong>，选择 <strong>OpenAI API Compatible</strong>，然后填写以下信息：</p>
-        <div class="config-box">
-          <div class="config-row">
-            <span class="config-label">AI Provider</span>
-            <span class="config-value">OpenAI API Compatible</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">API Host</span>
-            <span class="config-value">https://xiaobocode.com</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">API Key</span>
-            <span class="config-value">sk-YOUR_API_KEY</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">Model</span>
-            <span class="config-value">gpt-5.5</span>
-          </div>
-        </div>
-        <div class="callout callout-warn">
-          <div class="callout-title">&#9888; 注意</div>
-          <p>ChatBox 的 API Host 填写 <code>https://xiaobocode.com</code>（不带 <code>/v1</code> 后缀），ChatBox 会自动拼接路径。</p>
-        </div>
-      </div>
-      <div class="step">
-        <h4>开始使用</h4>
-        <p>配置完成后，返回主界面即可开始与 AI 对话。ChatBox 支持多轮对话、Markdown 渲染、代码高亮，还可以创建多个对话窗口同时进行不同话题的讨论。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- LobeChat -->
-  <section id="lobechat">
-    <h2>LobeChat 接入</h2>
-    <p>LobeChat 是一款开源的高颜值 AI 聊天界面，支持 Web 部署和本地运行，功能丰富，包括插件系统、知识库、多模态等。</p>
-
-    <div class="steps">
-      <div class="step">
-        <h4>访问 LobeChat</h4>
-        <p>您可以直接访问 <a href="https://chat-preview.lobehub.com" target="_blank" rel="noreferrer">LobeChat 在线版</a>，也可以通过 Docker 自行部署。本地部署方式请参考 <a href="https://github.com/lobehub/lobe-chat" target="_blank" rel="noreferrer">LobeChat GitHub 仓库</a>。</p>
-      </div>
-      <div class="step">
-        <h4>配置语言模型</h4>
-        <p>进入 LobeChat 后，点击左下角 <strong>设置</strong> &rarr; <strong>语言模型</strong> &rarr; <strong>OpenAI</strong>，进行以下配置：</p>
-        <div class="config-box">
-          <div class="config-row">
-            <span class="config-label">API Proxy 地址</span>
-            <span class="config-value">https://api.xiaobocode.com/v1</span>
-          </div>
-          <div class="config-row">
-            <span class="config-label">API Key</span>
-            <span class="config-value">sk-YOUR_API_KEY</span>
-          </div>
-        </div>
-      </div>
-      <div class="step">
-        <h4>选择模型并对话</h4>
-        <p>保存设置后，在对话界面顶部的模型选择器中选择您想使用的模型（如 <code>gpt-5.5</code>、<code>gpt-image-2</code> 等），即可开始对话。LobeChat 支持丰富的 AI 助手角色、插件扩展和文件上传功能。</p>
-      </div>
-    </div>
-
-    <div class="callout callout-tip">
-      <div class="callout-title">&#9989; 提示</div>
-      <p>如果在模型列表中没有看到您需要的模型，可以在设置中开启「自定义模型名称」功能，手动输入模型 ID（如 <code>claude-opus-4-7</code>）即可使用。</p>
-    </div>
-  </section>
-
   <!-- 更多客户端 -->
   <section id="more-clients">
     <h2>更多客户端</h2>
@@ -1285,8 +1129,6 @@ stream = client.chat.completions.<span class="fn">create</span>(
         <span class="config-value">参考上方「支持的模型」章节</span>
       </div>
     </div>
-
-    <p>如果您在接入过程中遇到任何问题，欢迎通过下方「联系我们」获取技术支持。</p>
   </section>
 
   <!-- Redeem Code -->
@@ -1332,79 +1174,135 @@ stream = client.chat.completions.<span class="fn">create</span>(
   <section id="faq">
     <h2>常见问题</h2>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">平台支持哪些模型？模型列表会更新吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">平台支持哪些模型？模型列表会更新吗？</summary>
       <div class="faq-a">当前支持 GPT-5.5、GPT-5.4 系列、GPT Image 2、o 系列推理模型以及 Claude Opus/Sonnet/Haiku 系列。模型列表会随官方发布和平台运营状态更新，具体可用模型请以控制台和「支持的模型」章节为准。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">API 接口与 OpenAI 官方完全兼容吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">API 接口与 OpenAI 官方完全兼容吗？</summary>
       <div class="faq-a">是的。本平台兼容 OpenAI 的 <code>/v1/chat/completions</code>、<code>/v1/responses</code> 和 Images 接口规范，包括流式输出、function calling、<code>gpt-image-2</code> 图片生成等能力。图片模型仅支持按量余额扣费，订阅套餐不可使用 image2；使用 OpenAI 官方 Python/Node.js SDK 时，只需修改 <code>base_url</code> 和 <code>api_key</code> 两个参数即可切换。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">遇到 429 错误怎么办？</div>
+    <details class="faq-item">
+      <summary class="faq-q">遇到 429 错误怎么办？</summary>
       <div class="faq-a">429 通常表示短时间内请求过多。请在客户端加入指数退避重试，并适当降低并发；如果持续出现，可联系客服协助排查当前账号和模型状态。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">Claude 模型和 OpenAI 模型的费率有什么区别？</div>
+    <details class="faq-item">
+      <summary class="faq-q">Claude 模型和 OpenAI 模型的费率有什么区别？</summary>
       <div class="faq-a">Codex / OpenAI 文本模型支持按量充值和套餐订阅；当前 Codex 套餐包含 codex周卡、标准月卡和 codex高级月卡。Claude 模型当前提供 Claude 周卡、Claude 标准月卡和 Claude 重度月卡三种专属套餐。image2 图片模型不属于订阅套餐范围，仅支持按量余额扣费，具体可用模型和购买状态请以控制台展示为准。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">充值余额和订阅套餐可以退款吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">充值余额和订阅套餐可以退款吗？</summary>
       <div class="faq-a">直接充值的未使用余额支持退款，请联系客服处理。订阅套餐属于即时生效的虚拟服务，购买成功后系统会立即发放套餐额度并开始计算有效期；已购买、已激活的订阅套餐不支持退款、退换或折算为按量余额。建议首次使用时先小额充值或购买周卡进行测试。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">套餐额度到期后会怎样？可以叠加购买吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">套餐额度到期后会怎样？可以叠加购买吗？</summary>
       <div class="faq-a">套餐到期后未使用的额度将失效，不会结转到下一周期。不同套餐之间的额度可以叠加——例如您当前持有周卡，可以再购买月卡，两个套餐的额度将同时可用，各自按照自己的有效期管理。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">出现 401 错误怎么排查？</div>
+    <details class="faq-item">
+      <summary class="faq-q">出现 401 错误怎么排查？</summary>
       <div class="faq-a">401 错误意味着身份认证失败，请按以下顺序排查：(1) 检查 API Key 是否正确复制，没有多余的空格或换行符；(2) 确认请求头格式为 <code>Authorization: Bearer sk-xxx</code>，注意 Bearer 后面有一个空格；(3) 在控制台确认该令牌是否仍处于「启用」状态且未被删除；(4) 确认账户余额大于 0。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">如何查看 API 调用用量和余额？</div>
+    <details class="faq-item">
+      <summary class="faq-q">如何查看 API 调用用量和余额？</summary>
       <div class="faq-a">登录 <a href="https://xiaobocode.com" target="_blank" rel="noreferrer">控制台</a> 后，在「仪表盘」页面可以查看当前余额和近期消费趋势。「日志」页面可以查看每一次 API 调用的详细记录，包括使用的模型、token 消耗数量和扣费金额。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">可以同时使用多个 API Key 吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">可以同时使用多个 API Key 吗？</summary>
       <div class="faq-a">可以。您可以在控制台创建多个 API Key，分别用于不同的项目或环境（如开发环境和生产环境）。所有 Key 共享同一账户余额，但日志中会区分来源，方便您追踪各项目的用量。您也可以为每个 Key 设置独立的额度上限。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">服务的稳定性和可用性如何保障？</div>
+    <details class="faq-item">
+      <summary class="faq-q">服务的稳定性和可用性如何保障？</summary>
       <div class="faq-a">平台采用多节点架构，配合自动负载均衡和故障转移机制。当某个节点异常时，系统会在毫秒级自动切换到健康节点，用户侧几乎无感知。历史可用性维持在 99.9% 以上。此外，平台有完善的监控告警体系，运维团队全天候值守。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">国内网络访问速度如何？需要翻墙吗？</div>
+    <details class="faq-item">
+      <summary class="faq-q">国内网络访问速度如何？需要翻墙吗？</summary>
       <div class="faq-a">不需要。本平台服务器部署在国内优质线路上，直接通过 <code>https://xiaobocode.com</code> 即可访问，无需任何代理或VPN。对于国内用户而言，访问延迟显著优于直连海外 API 服务。这也是使用本平台的核心优势之一。</div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-      <div class="faq-q" data-faq-toggle role="button" tabindex="0">是否支持 function calling / tools 功能？</div>
+    <details class="faq-item">
+      <summary class="faq-q">是否支持 function calling / tools 功能？</summary>
       <div class="faq-a">支持。对于 GPT 系列和 Claude 系列的模型，function calling（工具调用）功能完全透传，参数格式与 OpenAI 官方规范一致。您可以在请求中传入 <code>tools</code> 参数定义可调用的函数，模型会根据上下文判断是否需要调用。</div>
-    </div>
+    </details>
   </section>
 
-  <!-- Contact -->
-  <section id="contact">
-    <h2>联系我们</h2>
-    <div>
-      <div>
-        <div>售后1群已满</div>
-        <div>请扫码加入 <span>售后2群</span></div>
-        <p class="contact-note">请通过控制台或官方社群获取最新售后群二维码。</p>
-</div>
-    </div>
-  </section>
-`;
+        </article>
+      </section>
+    </main>
+
+    <MarketingFooter />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, watchEffect } from "vue";
+import MarketingFooter from "@/components/marketing/MarketingFooter.vue";
+import MarketingHeader from "@/components/marketing/MarketingHeader.vue";
+import { useAppStore } from "@/stores";
+
+const appStore = useAppStore();
+
+const navGroups = [
+  {
+    title: "入门",
+    items: [
+      { id: "overview", title: "平台概述" },
+      { id: "quickstart", title: "快速开始" },
+    ],
+  },
+  {
+    title: "接入指南",
+    items: [
+      { id: "api-basics", title: "API 基础信息" },
+      { id: "models", title: "支持的模型" },
+      { id: "request-format", title: "请求格式" },
+      { id: "response-format", title: "响应格式" },
+      { id: "error-codes", title: "错误码说明" },
+    ],
+  },
+  {
+    title: "计费",
+    items: [
+      { id: "pricing", title: "计费说明" },
+      { id: "pricing-compare", title: "套餐对比" },
+    ],
+  },
+  {
+    title: "代码示例",
+    items: [
+      { id: "example-python", title: "Python" },
+      { id: "example-nodejs", title: "Node.js" },
+      { id: "example-curl", title: "cURL" },
+      { id: "example-stream", title: "流式输出" },
+    ],
+  },
+  {
+    title: "进阶",
+    items: [
+      { id: "claude-code", title: "Claude Code 接入" },
+      { id: "vscode", title: "VS Code 插件" },
+      { id: "jetbrains", title: "JetBrains 插件" },
+      { id: "cherry-studio", title: "Cherry Studio" },
+      { id: "more-clients", title: "更多客户端" },
+    ],
+  },
+  {
+    title: "帮助",
+    items: [
+      { id: "redeem", title: "兑换码" },
+      { id: "faq", title: "常见问题" },
+    ],
+  },
+] as const;
 
 const siteName = computed(
   () =>
@@ -1415,40 +1313,11 @@ watchEffect(() => {
   document.title = `开发者文档 - ${siteName.value}`;
 });
 
-function handleContentKeydown(event: KeyboardEvent): void {
-  if (event.key !== "Enter" && event.key !== " ") {
-    return;
-  }
-
-  const target = event.target instanceof Element ? event.target : null;
-  if (!target?.closest("[data-faq-toggle]")) {
-    return;
-  }
-
-  event.preventDefault();
-  toggleFaqItem(target);
-}
-
-async function handleContentClick(event: MouseEvent): Promise<void> {
-  const target = event.target instanceof Element ? event.target : null;
-  if (!target) {
-    return;
-  }
-
-  const copyButton = target.closest("[data-copy-code]") as HTMLButtonElement | null;
-  if (copyButton) {
-    await copyCodeBlock(copyButton);
-    return;
-  }
-
-  if (target.closest("[data-faq-toggle]")) {
-    toggleFaqItem(target);
-  }
-}
-
-async function copyCodeBlock(button: HTMLButtonElement): Promise<void> {
-  const code = button.closest(".code-block")?.querySelector("code")?.textContent;
-  if (!code) {
+async function copyCodeBlock(event: MouseEvent): Promise<void> {
+  const button =
+    event.currentTarget instanceof HTMLButtonElement ? event.currentTarget : null;
+  const code = button?.closest(".code-block")?.querySelector("code")?.textContent;
+  if (!button || !code) {
     return;
   }
 
@@ -1473,9 +1342,6 @@ async function copyCodeBlock(button: HTMLButtonElement): Promise<void> {
   }, 1500);
 }
 
-function toggleFaqItem(target: Element): void {
-  target.closest(".faq-item")?.classList.toggle("open");
-}
 </script>
 
 <style scoped>
@@ -2028,40 +1894,41 @@ function toggleFaqItem(target: Element): void {
 }
 
 .docs-content :deep(.faq-q) {
+  display: flex;
   cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
   padding: 1rem 1.25rem;
   font-weight: 800;
   color: rgb(17 24 39);
 }
 
-.dark .docs-content :deep(.faq-q) {
-  color: rgb(243 244 246);
+.docs-content :deep(.faq-q::-webkit-details-marker) {
+  display: none;
+}
+
+.docs-content :deep(.faq-q::after) {
+  content: "+";
+  flex-shrink: 0;
+  color: rgb(37 99 235);
+  font-size: 1.125rem;
+}
+
+.docs-content :deep(.faq-item[open] .faq-q::after) {
+  content: "-";
 }
 
 .docs-content :deep(.faq-a) {
-  display: none;
   border-top: 1px solid rgb(229 231 235);
   padding: 1rem 1.25rem;
   color: rgb(75 85 99);
 }
 
-.docs-content :deep(.faq-item.open .faq-a) {
-  display: block;
-}
-
 .dark .docs-content :deep(.faq-a) {
   border-top-color: rgb(55 65 81 / 0.75);
   color: rgb(209 213 219);
-}
-
-.docs-content :deep(.contact-note) {
-  margin: 1rem 0 0;
-  border-radius: 0.875rem;
-  background: rgb(239 246 255);
-  padding: 1rem;
-  color: rgb(30 64 175);
-  text-align: center;
-  font-weight: 700;
 }
 
 @media (max-width: 640px) {
