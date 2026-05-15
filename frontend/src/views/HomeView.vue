@@ -151,51 +151,41 @@
 
       <section class="bg-white/70 py-14 dark:border-dark-800 dark:bg-dark-900/40">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.pricing.eyebrow }}</p>
-              <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.title }}</h2>
-              <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.description }}</p>
-            </div>
-            <div class="flex lg:justify-end">
-              <router-link to="/pricing" class="btn btn-primary btn-md">
+          <div class="mx-auto max-w-3xl text-center">
+            <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.pricing.eyebrow }}</p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.title }}</h2>
+            <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.description }}</p>
+          </div>
+
+          <article class="card card-hover mx-auto mt-8 max-w-3xl overflow-hidden p-6 md:p-8">
+            <div class="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
+                  <Icon name="bolt" size="lg" />
+                </div>
+                <div>
+                  <div class="badge badge-primary">{{ copy.pricing.card.badge }}</div>
+                  <h3 class="mt-3 text-2xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.card.title }}</h3>
+                  <p class="mt-3 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.card.description }}</p>
+                </div>
+              </div>
+              <router-link to="/pricing" class="btn btn-primary btn-md flex-shrink-0">
                 {{ copy.pricing.action }}
                 <Icon name="arrowRight" size="sm" />
               </router-link>
             </div>
-          </div>
 
-          <article class="card card-hover mt-8 overflow-hidden">
-            <div class="grid gap-8 p-6 lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
-              <div>
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
-                  <Icon name="creditCard" size="md" />
+            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+              <div
+                v-for="item in copy.pricing.card.features"
+                :key="item.title"
+                class="rounded-xl border border-gray-100 bg-gray-50/70 p-4 dark:border-dark-700 dark:bg-dark-900/50"
+              >
+                <div class="flex items-center gap-2 text-sm font-semibold text-gray-950 dark:text-white">
+                  <Icon :name="item.icon" size="sm" class="text-primary-500" />
+                  {{ item.title }}
                 </div>
-                <h3 class="mt-5 text-2xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.card.title }}</h3>
-                <p class="mt-3 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.card.description }}</p>
-                <div class="mt-5 flex flex-wrap gap-2">
-                  <span
-                    v-for="tag in copy.pricing.card.tags"
-                    :key="tag"
-                    class="badge badge-primary"
-                  >
-                    {{ tag }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="grid gap-3 md:grid-cols-3">
-                <div
-                  v-for="item in copy.pricing.card.items"
-                  :key="item.title"
-                  class="rounded-xl border border-gray-100 bg-gray-50/80 p-4 dark:border-dark-700 dark:bg-dark-900/40"
-                >
-                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-primary-600 shadow-sm ring-1 ring-gray-100 dark:bg-dark-800 dark:text-primary-300 dark:ring-dark-700">
-                    <Icon :name="item.icon" size="sm" />
-                  </div>
-                  <h4 class="mt-4 text-base font-semibold text-gray-950 dark:text-white">{{ item.title }}</h4>
-                  <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ item.description }}</p>
-                </div>
+                <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ item.description }}</p>
               </div>
             </div>
           </article>
@@ -325,28 +315,33 @@ const homeCopy = {
     },
     pricing: {
       eyebrow: '定价方案',
-      title: '按量付费，余额长期可用',
-      description: '无需订阅固定套餐，按实际调用消耗扣费，适合个人开发、团队协作和自动化任务。',
+      title: 'PAYGO 按量付费',
+      description: '无需订阅套餐，用多少付多少，余额长期保留。',
       action: '查看完整价格',
       card: {
-        title: '一个余额池，所有模型按量扣费',
-        description: '充值后的余额可用于不同模型和工具调用。无需预估月度用量，也不需要为了偶发任务购买固定套餐。',
-        tags: ['1 RMB = 1 USD', '余额永不过期', '按实际消耗扣费'],
-        items: [
+        badge: 'PAYGO',
+        title: '按量付费，灵活计费',
+        description: '创建 API Key 后即可开始调用，按实际模型用量扣费，不绑定固定套餐，也不需要预估长期额度。',
+        features: [
           {
-            icon: 'calculator',
+            icon: 'bolt',
             title: '按量付费',
-            description: '根据实际 token 或请求消耗计费，少用少付，多用透明。'
+            description: '根据实际请求和模型消耗扣费，轻量试用和高频调用都适用。'
           },
           {
             icon: 'swap',
             title: '灵活计费',
-            description: '同一个 API Key 可在不同模型、工具和 Agent 场景间切换。'
+            description: '同一个余额可用于不同模型和工具，按当前任务自由切换。'
           },
           {
             icon: 'clock',
-            title: '永不过期',
-            description: '余额长期保留，不因自然月或订阅周期清零。'
+            title: '余额永不过期',
+            description: '充值余额长期保留，不因低频使用而损失。'
+          },
+          {
+            icon: 'chartBar',
+            title: '用量清晰',
+            description: '在控制台查看余额与调用记录，成本变化一目了然。'
           }
         ]
       }
@@ -443,28 +438,33 @@ const homeCopy = {
     },
     pricing: {
       eyebrow: 'Pricing plans',
-      title: 'Pay as you go, balance stays available',
-      description: 'No fixed subscription package required. Pay only for actual usage across individual, team, and automation workflows.',
+      title: 'PAYGO billing',
+      description: 'No subscription required. Pay only for what you use, with balance kept long term.',
       action: 'View full pricing',
       card: {
-        title: 'One balance pool for all model usage',
-        description: 'Your topped-up balance can be used across models and tools. There is no need to estimate monthly usage or buy a fixed package for occasional tasks.',
-        tags: ['1 RMB = 1 USD', 'Balance never expires', 'Usage-based billing'],
-        items: [
+        badge: 'PAYGO',
+        title: 'Pay as you go, billed flexibly',
+        description: 'Create an API key and start calling models. Billing follows actual usage, without fixed plans or long-term quota estimates.',
+        features: [
           {
-            icon: 'calculator',
+            icon: 'bolt',
             title: 'Pay as you go',
-            description: 'Billing follows actual token or request usage, so light usage stays light.'
+            description: 'Costs follow real requests and model usage, from trials to high-frequency workloads.'
           },
           {
             icon: 'swap',
             title: 'Flexible billing',
-            description: 'Use one API key across models, tools, and agent workflows.'
+            description: 'Use the same balance across different models and tools as your tasks change.'
           },
           {
             icon: 'clock',
-            title: 'Never expires',
-            description: 'Balance stays available without monthly or subscription-cycle resets.'
+            title: 'Balance never expires',
+            description: 'Top-up balance stays available long term, even for occasional usage.'
+          },
+          {
+            icon: 'chartBar',
+            title: 'Clear usage',
+            description: 'Track balance and request history from the dashboard.'
           }
         ]
       }
