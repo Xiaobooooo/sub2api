@@ -165,61 +165,40 @@
             </div>
           </div>
 
-          <div class="mt-8 grid gap-4 lg:grid-cols-3">
-            <article
-              v-for="plan in copy.pricing.plans"
-              :key="plan.title"
-              class="card card-hover flex h-full flex-col overflow-hidden"
-            >
-              <div class="flex items-start justify-between gap-4 border-b border-gray-100 p-5 dark:border-dark-700">
-                <div class="flex items-start gap-3">
-                  <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
-                    <Icon :name="plan.icon" size="md" />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-950 dark:text-white">{{ plan.title }}</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-dark-400">{{ plan.subtitle }}</p>
-                  </div>
+          <article class="card card-hover mt-8 overflow-hidden">
+            <div class="grid gap-8 p-6 lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+              <div>
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
+                  <Icon name="creditCard" size="md" />
                 </div>
-                <span class="badge badge-primary flex-shrink-0">{{ plan.badge }}</span>
+                <h3 class="mt-5 text-2xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.card.title }}</h3>
+                <p class="mt-3 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.card.description }}</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span
+                    v-for="tag in copy.pricing.card.tags"
+                    :key="tag"
+                    class="badge badge-primary"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
               </div>
 
-              <div class="px-5 py-4">
-                <p class="text-sm font-semibold text-gray-950 dark:text-white">{{ plan.rate }}</p>
-                <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ plan.description }}</p>
+              <div class="grid gap-3 md:grid-cols-3">
+                <div
+                  v-for="item in copy.pricing.card.items"
+                  :key="item.title"
+                  class="rounded-xl border border-gray-100 bg-gray-50/80 p-4 dark:border-dark-700 dark:bg-dark-900/40"
+                >
+                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-primary-600 shadow-sm ring-1 ring-gray-100 dark:bg-dark-800 dark:text-primary-300 dark:ring-dark-700">
+                    <Icon :name="item.icon" size="sm" />
+                  </div>
+                  <h4 class="mt-4 text-base font-semibold text-gray-950 dark:text-white">{{ item.title }}</h4>
+                  <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ item.description }}</p>
+                </div>
               </div>
-
-              <div class="mt-auto overflow-x-auto px-5 pb-5">
-                <table class="w-full min-w-[420px] text-left text-xs">
-                  <thead>
-                    <tr class="border-b border-gray-100 text-gray-500 dark:border-dark-700 dark:text-dark-400">
-                      <th class="pb-2 font-medium">{{ copy.pricing.columns.model }}</th>
-                      <th class="pb-2 font-medium">{{ copy.pricing.columns.input }}</th>
-                      <th class="pb-2 font-medium">{{ copy.pricing.columns.output }}</th>
-                      <th class="pb-2 font-medium">{{ copy.pricing.columns.saving }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="row in plan.models"
-                      :key="row.name"
-                      class="border-b border-gray-100 last:border-0 dark:border-dark-800"
-                    >
-                      <td class="py-2 pr-3">
-                        <div class="font-mono text-gray-900 dark:text-gray-100">{{ row.name }}</div>
-                        <div class="mt-0.5 text-gray-400 dark:text-dark-500">{{ row.official }}</div>
-                      </td>
-                      <td class="py-2 pr-3 font-medium text-gray-700 dark:text-dark-200">{{ row.input }}</td>
-                      <td class="py-2 pr-3 font-medium text-gray-700 dark:text-dark-200">{{ row.output }}</td>
-                      <td class="py-2">
-                        <span class="badge badge-success">{{ row.saving }}</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -346,59 +325,31 @@ const homeCopy = {
     },
     pricing: {
       eyebrow: '定价方案',
-      title: '价格透明 · 按量计费',
-      description: '1 RMB = 1 USD，官方同价 · 渠道价低至 1 折，余额永不过期。',
+      title: '按量付费，余额长期可用',
+      description: '无需订阅固定套餐，按实际调用消耗扣费，适合个人开发、团队协作和自动化任务。',
       action: '查看完整价格',
-      columns: {
-        model: '模型',
-        input: '输入',
-        output: '输出',
-        saving: '节省'
-      },
-      plans: [
-        {
-          icon: 'brain',
-          title: 'Claude Code',
-          subtitle: '推荐编码场景',
-          badge: '省 90%',
-          rate: '1 折 · 0.7x 倍率',
-          description: '适合 Claude Code 高频开发，覆盖 Opus、Sonnet 与 Haiku 系列。',
-          models: [
-            { name: 'claude-opus-4-7', official: '官方 ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
-            { name: 'claude-opus-4-6', official: '官方 ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
-            { name: 'claude-sonnet-4-6', official: '官方 ¥21', input: '¥2.10', output: '¥10.50', saving: '90%' },
-            { name: 'claude-haiku-4-5', official: '官方 ¥7', input: '¥0.70', output: '¥3.50', saving: '90%' }
-          ]
-        },
-        {
-          icon: 'badge',
-          title: 'Claude Max',
-          subtitle: '稳定长任务',
-          badge: '省 71%',
-          rate: '2.9 折 · 2x 倍率',
-          description: '面向更稳定的 Claude 长上下文任务，适合持续分析与复杂推理。',
-          models: [
-            { name: 'claude-opus-4-7', official: '官方 ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
-            { name: 'claude-opus-4-6', official: '官方 ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
-            { name: 'claude-sonnet-4-6', official: '官方 ¥21', input: '¥6.00', output: '¥30.00', saving: '71%' },
-            { name: 'claude-haiku-4-5', official: '官方 ¥7', input: '¥2.00', output: '¥10.00', saving: '71%' }
-          ]
-        },
-        {
-          icon: 'bolt',
-          title: 'ChatGPT / Codex',
-          subtitle: 'OpenAI 系列',
-          badge: '省 93%',
-          rate: '0.7 折 · 0.5x 倍率',
-          description: '适合 Codex、通用对话和自动化编码任务，覆盖 GPT 与 Codex 模型。',
-          models: [
-            { name: 'gpt-5.5', official: '官方 ¥35', input: '¥2.50', output: '¥15.00', saving: '93%' },
-            { name: 'gpt-5.4', official: '官方 ¥35', input: '¥2.50', output: '¥11.25', saving: '93%' },
-            { name: 'gpt-5.2', official: '官方 ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' },
-            { name: 'gpt-5.3-codex', official: '官方 ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' }
-          ]
-        }
-      ]
+      card: {
+        title: '一个余额池，所有模型按量扣费',
+        description: '充值后的余额可用于不同模型和工具调用。无需预估月度用量，也不需要为了偶发任务购买固定套餐。',
+        tags: ['1 RMB = 1 USD', '余额永不过期', '按实际消耗扣费'],
+        items: [
+          {
+            icon: 'calculator',
+            title: '按量付费',
+            description: '根据实际 token 或请求消耗计费，少用少付，多用透明。'
+          },
+          {
+            icon: 'swap',
+            title: '灵活计费',
+            description: '同一个 API Key 可在不同模型、工具和 Agent 场景间切换。'
+          },
+          {
+            icon: 'clock',
+            title: '永不过期',
+            description: '余额长期保留，不因自然月或订阅周期清零。'
+          }
+        ]
+      }
     },
     cta: {
       title: '开始使用支持的模型',
@@ -492,59 +443,31 @@ const homeCopy = {
     },
     pricing: {
       eyebrow: 'Pricing plans',
-      title: 'Transparent pay-as-you-go pricing',
-      description: '1 RMB = 1 USD, official parity with channel pricing down to around 10% of official rates. Balance never expires.',
+      title: 'Pay as you go, balance stays available',
+      description: 'No fixed subscription package required. Pay only for actual usage across individual, team, and automation workflows.',
       action: 'View full pricing',
-      columns: {
-        model: 'Model',
-        input: 'Input',
-        output: 'Output',
-        saving: 'Save'
-      },
-      plans: [
-        {
-          icon: 'brain',
-          title: 'Claude Code',
-          subtitle: 'Recommended for coding',
-          badge: 'Save 90%',
-          rate: '0.7x multiplier · about 10% of official',
-          description: 'For heavy Claude Code development with Opus, Sonnet, and Haiku models.',
-          models: [
-            { name: 'claude-opus-4-7', official: 'Official ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
-            { name: 'claude-opus-4-6', official: 'Official ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
-            { name: 'claude-sonnet-4-6', official: 'Official ¥21', input: '¥2.10', output: '¥10.50', saving: '90%' },
-            { name: 'claude-haiku-4-5', official: 'Official ¥7', input: '¥0.70', output: '¥3.50', saving: '90%' }
-          ]
-        },
-        {
-          icon: 'badge',
-          title: 'Claude Max',
-          subtitle: 'Stable long-running tasks',
-          badge: 'Save 71%',
-          rate: '2x multiplier · about 29% of official',
-          description: 'For stable long-context Claude tasks, continuous analysis, and complex reasoning.',
-          models: [
-            { name: 'claude-opus-4-7', official: 'Official ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
-            { name: 'claude-opus-4-6', official: 'Official ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
-            { name: 'claude-sonnet-4-6', official: 'Official ¥21', input: '¥6.00', output: '¥30.00', saving: '71%' },
-            { name: 'claude-haiku-4-5', official: 'Official ¥7', input: '¥2.00', output: '¥10.00', saving: '71%' }
-          ]
-        },
-        {
-          icon: 'bolt',
-          title: 'ChatGPT / Codex',
-          subtitle: 'OpenAI models',
-          badge: 'Save 93%',
-          rate: '0.5x multiplier · about 7% of official',
-          description: 'For Codex, general chat, and automated coding workflows across GPT and Codex models.',
-          models: [
-            { name: 'gpt-5.5', official: 'Official ¥35', input: '¥2.50', output: '¥15.00', saving: '93%' },
-            { name: 'gpt-5.4', official: 'Official ¥35', input: '¥2.50', output: '¥11.25', saving: '93%' },
-            { name: 'gpt-5.2', official: 'Official ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' },
-            { name: 'gpt-5.3-codex', official: 'Official ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' }
-          ]
-        }
-      ]
+      card: {
+        title: 'One balance pool for all model usage',
+        description: 'Your topped-up balance can be used across models and tools. There is no need to estimate monthly usage or buy a fixed package for occasional tasks.',
+        tags: ['1 RMB = 1 USD', 'Balance never expires', 'Usage-based billing'],
+        items: [
+          {
+            icon: 'calculator',
+            title: 'Pay as you go',
+            description: 'Billing follows actual token or request usage, so light usage stays light.'
+          },
+          {
+            icon: 'swap',
+            title: 'Flexible billing',
+            description: 'Use one API key across models, tools, and agent workflows.'
+          },
+          {
+            icon: 'clock',
+            title: 'Never expires',
+            description: 'Balance stays available without monthly or subscription-cycle resets.'
+          }
+        ]
+      }
     },
     cta: {
       title: 'Start using supported models',
