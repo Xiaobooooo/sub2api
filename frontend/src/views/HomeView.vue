@@ -87,7 +87,7 @@
         </div>
       </section>
 
-      <section class="border-y border-gray-200 bg-white/70 py-14 dark:border-dark-800 dark:bg-dark-900/40">
+      <section class="bg-white/70 py-14 dark:border-dark-800 dark:bg-dark-900/40">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="max-w-3xl">
             <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.ecosystem.eyebrow }}</p>
@@ -149,20 +149,81 @@
         </div>
       </section>
 
-      <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-        <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div>
-            <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.pricing.eyebrow }}</p>
-            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.title }}</h2>
-            <router-link to="/pricing" class="btn btn-primary btn-md mt-6">
-              {{ copy.pricing.action }}
-              <Icon name="arrowRight" size="sm" />
-            </router-link>
+      <section class="bg-white/70 py-14 dark:border-dark-800 dark:bg-dark-900/40">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.pricing.eyebrow }}</p>
+              <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.pricing.title }}</h2>
+              <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.pricing.description }}</p>
+            </div>
+            <div class="flex lg:justify-end">
+              <router-link to="/pricing" class="btn btn-primary btn-md">
+                {{ copy.pricing.action }}
+                <Icon name="arrowRight" size="sm" />
+              </router-link>
+            </div>
+          </div>
+
+          <div class="mt-8 grid gap-4 lg:grid-cols-3">
+            <article
+              v-for="plan in copy.pricing.plans"
+              :key="plan.title"
+              class="card card-hover flex h-full flex-col overflow-hidden"
+            >
+              <div class="flex items-start justify-between gap-4 border-b border-gray-100 p-5 dark:border-dark-700">
+                <div class="flex items-start gap-3">
+                  <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
+                    <Icon :name="plan.icon" size="md" />
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-950 dark:text-white">{{ plan.title }}</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-dark-400">{{ plan.subtitle }}</p>
+                  </div>
+                </div>
+                <span class="badge badge-primary flex-shrink-0">{{ plan.badge }}</span>
+              </div>
+
+              <div class="px-5 py-4">
+                <p class="text-sm font-semibold text-gray-950 dark:text-white">{{ plan.rate }}</p>
+                <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ plan.description }}</p>
+              </div>
+
+              <div class="mt-auto overflow-x-auto px-5 pb-5">
+                <table class="w-full min-w-[420px] text-left text-xs">
+                  <thead>
+                    <tr class="border-b border-gray-100 text-gray-500 dark:border-dark-700 dark:text-dark-400">
+                      <th class="pb-2 font-medium">{{ copy.pricing.columns.model }}</th>
+                      <th class="pb-2 font-medium">{{ copy.pricing.columns.input }}</th>
+                      <th class="pb-2 font-medium">{{ copy.pricing.columns.output }}</th>
+                      <th class="pb-2 font-medium">{{ copy.pricing.columns.saving }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="row in plan.models"
+                      :key="row.name"
+                      class="border-b border-gray-100 last:border-0 dark:border-dark-800"
+                    >
+                      <td class="py-2 pr-3">
+                        <div class="font-mono text-gray-900 dark:text-gray-100">{{ row.name }}</div>
+                        <div class="mt-0.5 text-gray-400 dark:text-dark-500">{{ row.official }}</div>
+                      </td>
+                      <td class="py-2 pr-3 font-medium text-gray-700 dark:text-dark-200">{{ row.input }}</td>
+                      <td class="py-2 pr-3 font-medium text-gray-700 dark:text-dark-200">{{ row.output }}</td>
+                      <td class="py-2">
+                        <span class="badge badge-success">{{ row.saving }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
-      <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
         <div class="overflow-hidden rounded-2xl bg-gradient-primary p-8 text-white shadow-glow-lg md:p-10">
           <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
@@ -284,10 +345,60 @@ const homeCopy = {
       ]
     },
     pricing: {
-      eyebrow: '充值比例',
-      title: '充值 1RMB 得到 1USD 余额',
-      description: '充值后的美元余额用于模型调用扣费。',
-      action: '查看模型列表',
+      eyebrow: '定价方案',
+      title: '价格透明 · 按量计费',
+      description: '1 RMB = 1 USD，官方同价 · 渠道价低至 1 折，余额永不过期。',
+      action: '查看完整价格',
+      columns: {
+        model: '模型',
+        input: '输入',
+        output: '输出',
+        saving: '节省'
+      },
+      plans: [
+        {
+          icon: 'brain',
+          title: 'Claude Code',
+          subtitle: '推荐编码场景',
+          badge: '省 90%',
+          rate: '1 折 · 0.7x 倍率',
+          description: '适合 Claude Code 高频开发，覆盖 Opus、Sonnet 与 Haiku 系列。',
+          models: [
+            { name: 'claude-opus-4-7', official: '官方 ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
+            { name: 'claude-opus-4-6', official: '官方 ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
+            { name: 'claude-sonnet-4-6', official: '官方 ¥21', input: '¥2.10', output: '¥10.50', saving: '90%' },
+            { name: 'claude-haiku-4-5', official: '官方 ¥7', input: '¥0.70', output: '¥3.50', saving: '90%' }
+          ]
+        },
+        {
+          icon: 'badge',
+          title: 'Claude Max',
+          subtitle: '稳定长任务',
+          badge: '省 71%',
+          rate: '2.9 折 · 2x 倍率',
+          description: '面向更稳定的 Claude 长上下文任务，适合持续分析与复杂推理。',
+          models: [
+            { name: 'claude-opus-4-7', official: '官方 ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
+            { name: 'claude-opus-4-6', official: '官方 ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
+            { name: 'claude-sonnet-4-6', official: '官方 ¥21', input: '¥6.00', output: '¥30.00', saving: '71%' },
+            { name: 'claude-haiku-4-5', official: '官方 ¥7', input: '¥2.00', output: '¥10.00', saving: '71%' }
+          ]
+        },
+        {
+          icon: 'bolt',
+          title: 'ChatGPT / Codex',
+          subtitle: 'OpenAI 系列',
+          badge: '省 93%',
+          rate: '0.7 折 · 0.5x 倍率',
+          description: '适合 Codex、通用对话和自动化编码任务，覆盖 GPT 与 Codex 模型。',
+          models: [
+            { name: 'gpt-5.5', official: '官方 ¥35', input: '¥2.50', output: '¥15.00', saving: '93%' },
+            { name: 'gpt-5.4', official: '官方 ¥35', input: '¥2.50', output: '¥11.25', saving: '93%' },
+            { name: 'gpt-5.2', official: '官方 ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' },
+            { name: 'gpt-5.3-codex', official: '官方 ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' }
+          ]
+        }
+      ]
     },
     cta: {
       title: '开始使用支持的模型',
@@ -380,9 +491,60 @@ const homeCopy = {
       ]
     },
     pricing: {
-      eyebrow: 'Top-up ratio',
-      title: '1 RMB top-up gives 1 USD balance',
-      action: 'View model list',
+      eyebrow: 'Pricing plans',
+      title: 'Transparent pay-as-you-go pricing',
+      description: '1 RMB = 1 USD, official parity with channel pricing down to around 10% of official rates. Balance never expires.',
+      action: 'View full pricing',
+      columns: {
+        model: 'Model',
+        input: 'Input',
+        output: 'Output',
+        saving: 'Save'
+      },
+      plans: [
+        {
+          icon: 'brain',
+          title: 'Claude Code',
+          subtitle: 'Recommended for coding',
+          badge: 'Save 90%',
+          rate: '0.7x multiplier · about 10% of official',
+          description: 'For heavy Claude Code development with Opus, Sonnet, and Haiku models.',
+          models: [
+            { name: 'claude-opus-4-7', official: 'Official ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
+            { name: 'claude-opus-4-6', official: 'Official ¥35', input: '¥3.50', output: '¥17.50', saving: '90%' },
+            { name: 'claude-sonnet-4-6', official: 'Official ¥21', input: '¥2.10', output: '¥10.50', saving: '90%' },
+            { name: 'claude-haiku-4-5', official: 'Official ¥7', input: '¥0.70', output: '¥3.50', saving: '90%' }
+          ]
+        },
+        {
+          icon: 'badge',
+          title: 'Claude Max',
+          subtitle: 'Stable long-running tasks',
+          badge: 'Save 71%',
+          rate: '2x multiplier · about 29% of official',
+          description: 'For stable long-context Claude tasks, continuous analysis, and complex reasoning.',
+          models: [
+            { name: 'claude-opus-4-7', official: 'Official ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
+            { name: 'claude-opus-4-6', official: 'Official ¥35', input: '¥10.00', output: '¥50.00', saving: '71%' },
+            { name: 'claude-sonnet-4-6', official: 'Official ¥21', input: '¥6.00', output: '¥30.00', saving: '71%' },
+            { name: 'claude-haiku-4-5', official: 'Official ¥7', input: '¥2.00', output: '¥10.00', saving: '71%' }
+          ]
+        },
+        {
+          icon: 'bolt',
+          title: 'ChatGPT / Codex',
+          subtitle: 'OpenAI models',
+          badge: 'Save 93%',
+          rate: '0.5x multiplier · about 7% of official',
+          description: 'For Codex, general chat, and automated coding workflows across GPT and Codex models.',
+          models: [
+            { name: 'gpt-5.5', official: 'Official ¥35', input: '¥2.50', output: '¥15.00', saving: '93%' },
+            { name: 'gpt-5.4', official: 'Official ¥35', input: '¥2.50', output: '¥11.25', saving: '93%' },
+            { name: 'gpt-5.2', official: 'Official ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' },
+            { name: 'gpt-5.3-codex', official: 'Official ¥12.25', input: '¥0.88', output: '¥7.00', saving: '93%' }
+          ]
+        }
+      ]
     },
     cta: {
       title: 'Start using supported models',
