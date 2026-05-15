@@ -89,31 +89,60 @@
 
       <section class="border-y border-gray-200 bg-white/70 py-14 dark:border-dark-800 dark:bg-dark-900/40">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.platforms.eyebrow }}</p>
-            </div>
+          <div class="max-w-3xl">
+            <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.ecosystem.eyebrow }}</p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.ecosystem.title }}</h2>
+            <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.ecosystem.description }}</p>
           </div>
-          <div class="mt-8 grid gap-4 md:grid-cols-3">
+          <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
             <article
-              v-for="platform in copy.platforms.items"
-              :key="platform.name"
-              class="card card-hover p-6"
+              v-for="tool in copy.ecosystem.items"
+              :key="tool.name"
+              class="card card-hover flex h-full flex-col p-5"
             >
               <div class="flex items-center gap-3">
                 <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-gray-200 dark:bg-dark-800 dark:ring-dark-700">
-                  <img :src="platform.logo" :alt="`${platform.name} logo`" class="h-full w-full object-contain" />
+                  <img
+                    v-if="tool.logo"
+                    :src="tool.logo"
+                    :alt="`${tool.name} logo`"
+                    class="h-full w-full object-contain"
+                  />
+                  <Icon v-else name="cpu" size="md" class="text-primary-500" />
                 </div>
-                <h3 class="text-lg font-semibold text-gray-950 dark:text-white">{{ platform.name }}</h3>
+                <div class="min-w-0">
+                  <h3 class="truncate text-base font-semibold text-gray-950 dark:text-white">{{ tool.name }}</h3>
+                  <p class="mt-1 text-xs font-medium text-gray-500 dark:text-dark-400">{{ tool.meta }}</p>
+                </div>
               </div>
-              <div class="mt-4 flex flex-wrap gap-2">
-                <span
-                  v-for="model in platform.models"
-                  :key="model"
-                  class="badge badge-gray font-mono"
-                >
-                  {{ model }}
-                </span>
+              <p class="mt-4 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ tool.description }}</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div class="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
+          <div>
+            <p class="text-sm font-semibold text-primary-600 dark:text-primary-400">{{ copy.benefits.eyebrow }}</p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 dark:text-white">{{ copy.benefits.title }}</h2>
+            <p class="mt-4 text-sm leading-7 text-gray-600 dark:text-dark-300">{{ copy.benefits.description }}</p>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <article
+              v-for="item in copy.benefits.items"
+              :key="item.title"
+              class="card card-hover p-5"
+            >
+              <div class="flex items-start gap-4">
+                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 ring-1 ring-primary-100 dark:bg-primary-900/25 dark:text-primary-300 dark:ring-primary-800/60">
+                  <Icon :name="item.icon" size="md" />
+                </div>
+                <div>
+                  <h3 class="text-base font-semibold text-gray-950 dark:text-white">{{ item.title }}</h3>
+                  <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-dark-300">{{ item.description }}</p>
+                </div>
               </div>
             </article>
           </div>
@@ -160,15 +189,14 @@ import MarketingFooter from '@/components/marketing/MarketingFooter.vue'
 import MarketingHeader from '@/components/marketing/MarketingHeader.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { useAppStore, useAuthStore } from '@/stores'
-import claudeLogo from '@/assets/icons/claude.svg'
-import openaiLogo from '@/assets/icons/openai.svg'
+import claudeCodeLogo from '@/assets/icons/claudecode.svg'
+import codexLogo from '@/assets/icons/codex.svg'
+import hermesLogo from '@/assets/icons/hermesagent.svg'
+import openClawLogo from '@/assets/icons/openclaw.svg'
 
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const { locale } = useI18n()
-
-const claudeModels = ['claude-opus-4-7', 'claude-opus-4-6', 'claude-sonnet-4-6', 'claude-haiku-4-5'] as const
-const openAiModels = ['gpt-5.5', 'gpt-5.4', 'gpt-5.3-codex'] as const
 
 const homeCopy = {
   zh: {
@@ -181,7 +209,7 @@ const homeCopy = {
       dashboard: '进入控制台',
       pricing: '查看模型',
       stats: [
-        { value: '2', label: '支持平台' },
+        { value: '5+', label: '兼容生态' },
         { value: '7', label: '支持模型' },
         { value: '1￥:1＄', label: '充值比例' }
       ]
@@ -191,11 +219,68 @@ const homeCopy = {
       subtitle: '全球顶尖模型集中接入',
       status: '在线',
     },
-    platforms: {
-      eyebrow: '支持平台',
+    ecosystem: {
+      eyebrow: '兼容生态',
+      title: '接入主流 AI Agent 工作流',
+      description: '面向日常编码、重构、调试和自动化任务，保持常见 AI Agent 的原有使用方式，只替换 API Key 与调用地址即可接入。',
       items: [
-        { name: 'Claude', logo: claudeLogo, models: claudeModels },
-        { name: 'OpenAI', logo: openaiLogo, models: openAiModels }
+        {
+          name: 'Codex',
+          meta: 'OpenAI',
+          logo: codexLogo,
+          description: '适合大型重构、Bug 修复、测试生成和代码审查等工程任务。'
+        },
+        {
+          name: 'Claude Code',
+          meta: 'Anthropic',
+          logo: claudeCodeLogo,
+          description: '保留 CLI 编程助手体验，适合长上下文分析与项目级改动。'
+        },
+        {
+          name: 'OpenClaw',
+          meta: '开源 · 本地',
+          logo: openClawLogo,
+          description: '面向本地工作流的开源 AI Agent，适合可控的桌面开发环境。'
+        },
+        {
+          name: 'Hermes',
+          meta: 'AI Agent',
+          logo: hermesLogo,
+          description: '适合接入自动化代理流程，把模型能力嵌入持续开发任务。'
+        },
+        {
+          name: '其他AI Agent',
+          meta: 'OpenAI 兼容',
+          logo: '',
+          description: '支持通过兼容接口接入更多编辑器插件、终端工具和自建代理。'
+        }
+      ]
+    },
+    benefits: {
+      eyebrow: '使用价值',
+      title: '一个入口覆盖更多模型与场景',
+      description: '围绕真实开发工作流设计，减少环境、账号和工具切换带来的额外成本。',
+      items: [
+        {
+          icon: 'key',
+          title: '一个 Key 调用全模型',
+          description: '统一管理 API Key，在 Claude、OpenAI 等模型间灵活切换。'
+        },
+        {
+          icon: 'globe',
+          title: '低延迟直连',
+          description: '面向国内访问优化，减少额外网络配置，让工具更快进入可用状态。'
+        },
+        {
+          icon: 'swap',
+          title: '改一行 BASE_URL 接入',
+          description: '兼容常见 SDK 与 Agent 配置方式，降低迁移和接入成本。'
+        },
+        {
+          icon: 'chartBar',
+          title: '统一面板管理',
+          description: '集中查看用量、余额和 Key 状态，团队与个人调用都更清晰。'
+        }
       ]
     },
     pricing: {
@@ -220,7 +305,7 @@ const homeCopy = {
       dashboard: 'Dashboard',
       pricing: 'View models',
       stats: [
-        { value: '2', label: 'Platforms' },
+        { value: '5+', label: 'Compatible tools' },
         { value: '7', label: 'Models' },
         { value: '1￥:1＄', label: 'Top-up ratio' }
       ]
@@ -230,12 +315,68 @@ const homeCopy = {
       subtitle: 'Centralized access to World’s Leading AI Models',
       status: 'Online',
     },
-    platforms: {
-      eyebrow: 'Supported platforms',
-      description: 'Only currently available platforms and model IDs are shown.',
+    ecosystem: {
+      eyebrow: 'Compatible ecosystem',
+      title: 'Works with mainstream AI Agent workflows',
+      description: 'Keep your familiar coding, refactoring, debugging, and automation workflow. Replace the API key and base URL to connect through the gateway.',
       items: [
-        { name: 'Claude', logo: claudeLogo, models: claudeModels },
-        { name: 'OpenAI', logo: openaiLogo, models: openAiModels }
+        {
+          name: 'Codex',
+          meta: 'OpenAI',
+          logo: codexLogo,
+          description: 'Built for large refactors, bug fixes, test generation, and code review tasks.'
+        },
+        {
+          name: 'Claude Code',
+          meta: 'Anthropic',
+          logo: claudeCodeLogo,
+          description: 'Keeps the CLI assistant workflow for long-context analysis and project changes.'
+        },
+        {
+          name: 'OpenClaw',
+          meta: 'Open source · Local',
+          logo: openClawLogo,
+          description: 'A local open-source agent option for controlled desktop development.'
+        },
+        {
+          name: 'Hermes',
+          meta: 'AI Agent',
+          logo: hermesLogo,
+          description: 'Connect automated agent flows to model capabilities for ongoing development tasks.'
+        },
+        {
+          name: 'Other AI Agents',
+          meta: 'OpenAI compatible',
+          logo: '',
+          description: 'Use compatible endpoints with more editor plugins, terminal tools, and custom agents.'
+        }
+      ]
+    },
+    benefits: {
+      eyebrow: 'Usage value',
+      title: 'One gateway for more models and scenarios',
+      description: 'Designed around real development workflows to reduce environment, account, and tool switching overhead.',
+      items: [
+        {
+          icon: 'key',
+          title: 'One key for every model',
+          description: 'Manage one API key and switch between Claude, OpenAI, and other model families.'
+        },
+        {
+          icon: 'globe',
+          title: 'Low-latency direct access',
+          description: 'Optimized access reduces extra network setup and gets tools ready faster.'
+        },
+        {
+          icon: 'swap',
+          title: 'Change one BASE_URL',
+          description: 'Compatible with common SDK and Agent configuration patterns to lower migration cost.'
+        },
+        {
+          icon: 'chartBar',
+          title: 'Unified dashboard',
+          description: 'Track usage, balance, and key status from one place for individuals and teams.'
+        }
       ]
     },
     pricing: {
