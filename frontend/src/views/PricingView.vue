@@ -284,7 +284,6 @@ const pricingCopy = {
       claude: {
         label: "Claude",
         logo: claudeLogo,
-        description: "当前 Claude 平台支持以下模型。",
         groups: [
           {
             id: "claude-official",
@@ -293,14 +292,6 @@ const pricingCopy = {
               "2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等",
             multiplier: 2,
             saving: "省 71%",
-          },
-          {
-            id: "claude claude-kiro",
-            name: "kiro逆向",
-            description:
-              "0.3x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等",
-            multiplier: 0.3,
-            saving: "省 90%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -335,9 +326,8 @@ const pricingCopy = {
         ] satisfies ModelPrice[],
       },
       openai: {
-        label: "OpenAI (GPT)",
+        label: "OpenAI",
         logo: openaiLogo,
-        description: "当前 OpenAI 平台支持以下 GPT 模型。",
         groups: [
           {
             id: "openai-official",
@@ -412,7 +402,6 @@ const pricingCopy = {
       claude: {
         label: "Claude",
         logo: claudeLogo,
-        description: "The Claude platform currently supports these models.",
         groups: [
           {
             id: "claude-official",
@@ -455,9 +444,8 @@ const pricingCopy = {
         ] satisfies ModelPrice[],
       },
       openai: {
-        label: "OpenAI (GPT)",
+        label: "OpenAI",
         logo: openaiLogo,
-        description: "The OpenAI platform currently supports these GPT models.",
         groups: [
           {
             id: "openai-official",
