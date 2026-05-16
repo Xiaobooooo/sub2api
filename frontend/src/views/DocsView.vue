@@ -161,16 +161,6 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>Images</td>
-                    <td>
-                      <code
-                        >https://api.xiaobocode.com/v1/images/generations</code
-                      >
-                      /
-                      <code>https://api.xiaobocode.com/v1/images/edits</code>
-                    </td>
-                  </tr>
-                  <tr>
                     <td>协议</td>
                     <td>HTTPS（必须）</td>
                   </tr>

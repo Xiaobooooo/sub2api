@@ -13,7 +13,7 @@
 
       <div>
         <h2 class="text-sm font-semibold text-gray-900 dark:text-white">{{ copy.product }}</h2>
-        <div class="mt-4 grid gap-3 text-sm">
+        <div class="mt-4 flex flex-col items-start gap-3 text-sm">
           <router-link class="transition-colors hover:text-primary-600 dark:hover:text-primary-400" to="/pricing">
             {{ copy.pricing }}
           </router-link>
@@ -28,7 +28,7 @@
 
       <div>
         <h2 class="text-sm font-semibold text-gray-900 dark:text-white">{{ copy.resources }}</h2>
-        <div class="mt-4 grid gap-3 text-sm">
+        <div class="mt-4 flex flex-col items-start gap-3 text-sm">
           <a
             v-if="docUrl"
             class="transition-colors hover:text-primary-600 dark:hover:text-primary-400"
