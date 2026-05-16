@@ -397,7 +397,7 @@ func (s *EmailService) buildVerifyCodeEmailBody(code, siteName string) string {
         .lead { margin: 0; color: #0f172a; font-size: 18px; line-height: 1.6; font-weight: 700; }
         .description { margin: 10px auto 0; max-width: 440px; color: #64748b; font-size: 14px; line-height: 1.8; }
         .code-card { display: inline-block; margin: 26px 0 22px; padding: 22px 26px; background: #fcf7f5; border: 1px solid #efd0c5; border-radius: 16px; }
-        .code { color: #69382d; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: 10px; }
+        .code { color: #69382d; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: 10px; text-indent: 10px;}
         .notice { margin: 0 auto; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; text-align: left; }
         .notice p { margin: 0; color: #475569; font-size: 14px; line-height: 1.75; }
         .notice p + p { margin-top: 8px; }

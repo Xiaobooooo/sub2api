@@ -1042,7 +1042,7 @@ export default {
       title: 'How It Works',
       line1: 'Share your affiliate code or invite link with new users.',
       line2: 'When invitees recharge, you receive {rate} of the recharge as rebate quota.',
-      line3: 'Transfer rebate quota to balance at any time.',
+      line3: 'Transfer rebate quota to your account balance at any time. (Once it reaches 100, you may contact customer service to withdraw.)',
       line4: 'Newly earned rebates may have a waiting period before they can be transferred.'
     }
   },
