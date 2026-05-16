@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"encoding/hex"
 	"fmt"
+	"html"
 	"log/slog"
 	"math/big"
 	"net"
@@ -376,42 +377,69 @@ func (s *EmailService) VerifyCode(ctx context.Context, email, code string) error
 
 // buildVerifyCodeEmailBody 构建验证码邮件HTML内容
 func (s *EmailService) buildVerifyCodeEmailBody(code, siteName string) string {
+	escapedCode := html.EscapeString(code)
+	escapedSiteName := html.EscapeString(siteName)
+
 	return fmt.Sprintf(`
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); color: white; padding: 30px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; }
-        .content { padding: 40px 30px; text-align: center; }
-        .code { font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #333; background-color: #f8f9fa; padding: 20px 30px; border-radius: 8px; display: inline-block; margin: 20px 0; font-family: monospace; }
-        .info { color: #666; font-size: 14px; line-height: 1.6; margin-top: 20px; }
-        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #999; font-size: 12px; }
+        body { margin: 0; padding: 0; background: #f8fafc; color: #334155; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; -webkit-text-size-adjust: 100%%; }
+        .shell { padding: 32px 16px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08); }
+        .header { background-color: #cc785c; background-image: linear-gradient(135deg, #cc785c 0%%, #b65f46 100%%); color: #ffffff; padding: 32px; }
+        .eyebrow { margin: 0 0 10px; color: #fcf7f5; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .header h1 { margin: 0; color: #ffffff; font-size: 26px; line-height: 1.25; font-weight: 800; letter-spacing: -0.02em; }
+        .content { padding: 36px 32px 32px; text-align: center; }
+        .lead { margin: 0; color: #0f172a; font-size: 18px; line-height: 1.6; font-weight: 700; }
+        .description { margin: 10px auto 0; max-width: 440px; color: #64748b; font-size: 14px; line-height: 1.8; }
+        .code-card { display: inline-block; margin: 26px 0 22px; padding: 22px 26px; background: #fcf7f5; border: 1px solid #efd0c5; border-radius: 16px; }
+        .code { color: #69382d; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: 10px; }
+        .notice { margin: 0 auto; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; text-align: left; }
+        .notice p { margin: 0; color: #475569; font-size: 14px; line-height: 1.75; }
+        .notice p + p { margin-top: 8px; }
+        .notice strong { color: #0f172a; }
+        .footer { background: #0f172a; padding: 22px 28px; text-align: center; }
+        .footer p { margin: 0; color: #94a3b8; font-size: 12px; line-height: 1.7; }
+        .footer strong { color: #f8fafc; }
+        @media (max-width: 480px) {
+            .shell { padding: 20px 12px; }
+            .header, .content { padding-left: 22px; padding-right: 22px; }
+            .code-card { display: block; padding-left: 14px; padding-right: 14px; }
+            .code { font-size: 32px; letter-spacing: 6px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>%s</h1>
-        </div>
-        <div class="content">
-            <p style="font-size: 18px; color: #333;">Your verification code is:</p>
-            <div class="code">%s</div>
-            <div class="info">
-                <p>This code will expire in <strong>15 minutes</strong>.</p>
-                <p>If you did not request this code, please ignore this email.</p>
+    <div class="shell">
+        <div class="container">
+            <div class="header">
+                <p class="eyebrow">Email Verification</p>
+                <h1>%s</h1>
             </div>
-        </div>
-        <div class="footer">
-            <p>This is an automated message, please do not reply.</p>
+            <div class="content">
+                <p class="lead">Your email verification code</p>
+                <p class="description">Enter this code on the current page to complete verification. Do not share it with anyone.</p>
+                <div class="code-card">
+                    <div class="code">%s</div>
+                </div>
+                <div class="notice">
+                    <p>This code will expire in <strong>15 minutes</strong>.</p>
+                    <p>If you did not request this code, you can safely ignore this email.</p>
+                </div>
+            </div>
+            <div class="footer">
+                <p><strong>%s</strong></p>
+                <p>This is an automated email. Please do not reply directly.</p>
+            </div>
         </div>
     </div>
 </body>
 </html>
-`, siteName, code)
+`, escapedSiteName, escapedCode, escapedSiteName)
 }
 
 // TestSMTPConnectionWithConfig 使用指定配置测试SMTP连接
@@ -503,7 +531,7 @@ func (s *EmailService) SendPasswordResetEmail(ctx context.Context, email, siteNa
 	fullResetURL := fmt.Sprintf("%s?email=%s&token=%s", resetURL, url.QueryEscape(email), url.QueryEscape(token))
 
 	// Build email content
-	subject := fmt.Sprintf("[%s] 密码重置请求", siteName)
+	subject := fmt.Sprintf("[%s] Password Reset Request", siteName)
 	body := s.buildPasswordResetEmailBody(fullResetURL, siteName)
 
 	// Send email
@@ -567,48 +595,71 @@ func (s *EmailService) ConsumePasswordResetToken(ctx context.Context, email, tok
 
 // buildPasswordResetEmailBody builds the HTML content for password reset email
 func (s *EmailService) buildPasswordResetEmailBody(resetURL, siteName string) string {
+	escapedResetURL := html.EscapeString(resetURL)
+	escapedSiteName := html.EscapeString(siteName)
+
 	return fmt.Sprintf(`
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); color: white; padding: 30px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; }
-        .content { padding: 40px 30px; text-align: center; }
-        .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; margin: 20px 0; }
-        .button:hover { opacity: 0.9; }
-        .info { color: #666; font-size: 14px; line-height: 1.6; margin-top: 20px; }
-        .link-fallback { color: #666; font-size: 12px; word-break: break-all; margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 4px; }
-        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #999; font-size: 12px; }
-        .warning { color: #e74c3c; font-weight: 500; }
+        body { margin: 0; padding: 0; background: #f8fafc; color: #334155; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; -webkit-text-size-adjust: 100%%; }
+        .shell { padding: 32px 16px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08); }
+        .header { background-color: #cc785c; background-image: linear-gradient(135deg, #cc785c 0%%, #b65f46 100%%); color: #ffffff; padding: 32px; }
+        .eyebrow { margin: 0 0 10px; color: #fcf7f5; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .header h1 { margin: 0; color: #ffffff; font-size: 26px; line-height: 1.25; font-weight: 800; letter-spacing: -0.02em; }
+        .content { padding: 36px 32px 32px; text-align: center; }
+        .lead { margin: 0; color: #0f172a; font-size: 18px; line-height: 1.6; font-weight: 700; }
+        .description { margin: 10px auto 0; max-width: 440px; color: #64748b; font-size: 14px; line-height: 1.8; }
+        .button { display: inline-block; margin: 26px 0 22px; padding: 14px 28px; background-color: #cc785c; background-image: linear-gradient(135deg, #cc785c 0%%, #b65f46 100%%); border-radius: 12px; color: #ffffff !important; font-size: 15px; font-weight: 800; line-height: 1; text-decoration: none; box-shadow: 0 10px 28px rgba(204, 120, 92, 0.28); }
+        .notice { margin: 0 auto; padding: 16px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; text-align: left; }
+        .notice p { margin: 0; color: #475569; font-size: 14px; line-height: 1.75; }
+        .notice p + p { margin-top: 8px; }
+        .notice strong { color: #0f172a; }
+        .warning { color: #974a35; font-weight: 700; }
+        .link-fallback { margin-top: 18px; padding: 14px 16px; background: #fcf7f5; border: 1px solid #efd0c5; border-radius: 14px; color: #64748b; font-size: 12px; line-height: 1.7; text-align: left; word-break: break-all; }
+        .link-fallback p { margin: 0; }
+        .link-fallback p + p { margin-top: 8px; color: #334155; }
+        .footer { background: #0f172a; padding: 22px 28px; text-align: center; }
+        .footer p { margin: 0; color: #94a3b8; font-size: 12px; line-height: 1.7; }
+        .footer strong { color: #f8fafc; }
+        @media (max-width: 480px) {
+            .shell { padding: 20px 12px; }
+            .header, .content { padding-left: 22px; padding-right: 22px; }
+            .button { display: block; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>%s</h1>
-        </div>
-        <div class="content">
-            <p style="font-size: 18px; color: #333;">密码重置请求</p>
-            <p style="color: #666;">您已请求重置密码。请点击下方按钮设置新密码：</p>
-            <a href="%s" class="button">重置密码</a>
-            <div class="info">
-                <p>此链接将在 <strong>30 分钟</strong>后失效。</p>
-                <p class="warning">如果您没有请求重置密码，请忽略此邮件。您的密码将保持不变。</p>
+    <div class="shell">
+        <div class="container">
+            <div class="header">
+                <p class="eyebrow">Password Reset</p>
+                <h1>%s</h1>
             </div>
-            <div class="link-fallback">
-                <p>如果按钮无法点击，请复制以下链接到浏览器中打开：</p>
-                <p>%s</p>
+            <div class="content">
+                <p class="lead">Reset your password</p>
+                <p class="description">We received a request to reset your password. Use the button below to set a new password and continue using your account.</p>
+                <a href="%s" class="button">Reset Password</a>
+                <div class="notice">
+                    <p>This link will expire in <strong>30 minutes</strong>.</p>
+                    <p class="warning">If you did not request a password reset, you can ignore this email. Your password will not change.</p>
+                </div>
+                <div class="link-fallback">
+                    <p>If the button does not work, copy and paste this link into your browser:</p>
+                    <p>%s</p>
+                </div>
             </div>
-        </div>
-        <div class="footer">
-            <p>这是一封自动发送的邮件，请勿回复。</p>
+            <div class="footer">
+                <p><strong>%s</strong></p>
+                <p>This is an automated email. Please do not reply directly.</p>
+            </div>
         </div>
     </div>
 </body>
 </html>
-`, siteName, resetURL, resetURL)
+`, escapedSiteName, escapedResetURL, escapedResetURL, escapedSiteName)
 }
