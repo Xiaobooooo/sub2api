@@ -88,9 +88,6 @@
                   <Icon name="calculator" size="sm" />
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-950 dark:text-white">
-                    {{ copy.pricingRule.title }}
-                  </p>
                   <p
                     class="mt-1 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300"
                   >
@@ -259,10 +256,9 @@ const pricingCopy = {
       ],
     },
     platforms: {
-      title: "选择平台",
+      title: "计价规则",
     },
     pricingRule: {
-      title: "计价规则",
       formula: "分组价格 = 官方价格 × 分组倍率 ÷ 7",
     },
     groupSelector: {
@@ -289,7 +285,7 @@ const pricingCopy = {
             id: "claude-official",
             name: "Claude Official",
             description:
-              "2x 倍率 · 相当于约 2.9 折\n官方满血订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等",
+              "2x 倍率 · 相当于约 2.9 折(倍率动态调整，以实际分组为准)\nClaude官方订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等其他Agent",
             multiplier: 2,
             saving: "省 71%",
           },
@@ -333,9 +329,9 @@ const pricingCopy = {
             id: "openai-official",
             name: "OpenaiOfficial",
             description:
-              "0.6x 倍率 · 相当于约 8.5 折\n官方直连，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾",
+              "0.6x 倍率 · 相当于约 0.85 折(倍率动态调整，以实际分组为准)\nOpenAI官方订阅，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾",
             multiplier: 0.6,
-            saving: "约 8.5 折",
+            saving: "省 91%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -377,10 +373,9 @@ const pricingCopy = {
       ],
     },
     platforms: {
-      title: "Choose platform",
+      title: "Pricing rule",
     },
     pricingRule: {
-      title: "Pricing rule",
       formula: "Group price = official price × group multiplier ÷ 7",
     },
     groupSelector: {
@@ -407,7 +402,7 @@ const pricingCopy = {
             id: "claude-official",
             name: "Claude Official",
             description:
-              "2x multiplier · about 29% of official price\nOfficial full-powered subscription. Claude Code and Claude Desktop only; OpenClaw, Hermes, and similar clients are not supported.",
+              "2x rate · Equivalent to about 29% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial Claude subscription. Only Claude Code and Claude Desktop are supported; other agents such as OpenClaw and Hermes are not supported.",
             multiplier: 2,
             saving: "Save 71%",
           },
@@ -451,9 +446,9 @@ const pricingCopy = {
             id: "openai-official",
             name: "OpenaiOfficial",
             description:
-              "0.6x multiplier · about 85% of official price\nOfficial direct access. GPT 5.5 can replace Opus 4.7 and is recommended for coding and high-volume agent work.",
+              "0.6x rate · Equivalent to about 8.5% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial OpenAI subscription. GPT-5.5 can serve as an alternative to Opus 4.7, recommended for programming",
             multiplier: 0.6,
-            saving: "About 85%",
+            saving: "Save 91%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -558,10 +553,10 @@ const pricingRuleDescription = computed(() => {
   );
 
   if (activeLocale.value === "zh") {
-    return `${copy.value.pricingRule.formula}\t\t\t示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`;
+    return `${copy.value.pricingRule.formula}\n示例：${model.id} 输入价，官方 ￥${model.input.toFixed(2)}，${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`;
   }
 
-  return `${copy.value.pricingRule.formula}\t\t\tExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`;
+  return `${copy.value.pricingRule.formula}\nExample: ${model.id} input price, official ￥${model.input.toFixed(2)}, ${activeGroupData.value.name} ￥ ${groupPrice} ${copy.value.table.balanceSuffix}`;
 });
 const siteName = computed(
   () =>
