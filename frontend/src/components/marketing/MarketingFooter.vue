@@ -40,7 +40,7 @@
           </a>
           <router-link
             class="transition-colors hover:text-primary-600 dark:hover:text-primary-400"
-            :to="{ path: '/home', hash: '#faq' }"
+            :to="{ path: '/docs#faq', hash: '#faq' }"
           >
             {{ copy.faq }}
           </router-link>

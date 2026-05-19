@@ -161,6 +161,19 @@
                     </td>
                   </tr>
                   <tr>
+                    <td>Messages</td>
+                    <td>
+                      <code>https://api.xiaobocode.com/v1/messages</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Images</td>
+                    <td>
+                      <code>https://api.xiaobocode.com/v1/images/generations</code> /
+                      <code>https://api.xiaobocode.com/v1/images/edits</code>
+                    </td>
+                  </tr>
+                  <tr>
                     <td>协议</td>
                     <td>HTTPS（必须）</td>
                   </tr>
@@ -200,9 +213,9 @@
           <section id="request-format">
             <h2>请求格式</h2>
             <p>
-              平台兼容 OpenAI 和 Claude 请求格式:
-              <code>/v1/chat/completions</code>、<code>/v1/responses</code>
-              、<code>/v1/messages</code>
+              平台兼容 OpenAI 和 Claude 请求API:
+              <code>/v1/chat/completions</code>、<code>/v1/responses</code> 、<code>/v1/messages</code>
+              ，OpenAI图片生成API: <code>/v1/images/generations</code>
             </p>
 
             <h3>请求参数</h3>
@@ -223,9 +236,7 @@
                     <td>是</td>
                     <td>
                       模型标识，如
-                      <code>gpt-5.5</code>、<code>gpt-image-2</code>、<code
-                        >claude-opus-4-6</code
-                      >
+                      <code>gpt-5.5</code>、<code>gpt-image-2</code>、<code>claude-opus-4-7</code>
                     </td>
                   </tr>
                   <tr>
@@ -500,9 +511,7 @@ data: [DONE]</code></pre>
             <div class="callout callout-info">
               <div class="callout-title">&#128178; 充值比例</div>
               <p>
-                <strong>&#165;1 人民币 = $1 美元余额</strong>（1:1），最低充值
-                10 元。充值后余额以美元显示，API 调用按照模型的 token
-                消耗从余额中扣除。
+                <strong>&#165;1 人民币 = $1 美元余额</strong>（1:1），最低充值 5 元。充值后余额以美元显示，API 调用按照模型的 token消耗从余额中扣除。
               </p>
             </div>
 
@@ -1177,13 +1186,10 @@ EOF</code></pre>
 
             <details class="faq-item">
               <summary class="faq-q">
-                国内网络访问速度如何？需要翻墙吗？
+                国内访问需要翻墙吗？
               </summary>
               <div class="faq-a">
-                不需要。本平台服务器部署在国内优质线路上，直接通过
-                <code>https://xiaobocode.com</code>
-                即可访问，无需任何代理或VPN。对于国内用户而言，访问延迟显著优于直连海外
-                API 服务。这也是使用本平台的核心优势之一。
+                不需要。直接通过浏览器访问 <code>https://xiaobocode.com</code> 即可，无需任何代理或VPN。
               </div>
             </details>
 

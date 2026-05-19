@@ -285,9 +285,9 @@ const pricingCopy = {
             id: "claude-official",
             name: "Claude Official",
             description:
-              "2x 倍率 · 相当于约 2.9 折(倍率动态调整，以实际分组为准)\nClaude官方订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等其他Agent",
-            multiplier: 2,
-            saving: "省 71%",
+              "1.8x 倍率 · 相当于约 2.5 折(倍率动态调整，以实际分组为准)\nClaude官方订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等其他Agent",
+            multiplier: 1.8,
+            saving: "省 75%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -329,9 +329,9 @@ const pricingCopy = {
             id: "openai-official",
             name: "OpenaiOfficial",
             description:
-              "0.6x 倍率 · 相当于约 0.85 折(倍率动态调整，以实际分组为准)\nOpenAI官方订阅，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾",
-            multiplier: 0.6,
-            saving: "省 91%",
+              "0.5x 倍率 · 相当于约 0.7 折(倍率动态调整，以实际分组为准)\nOpenAI官方订阅，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾",
+            multiplier: 0.5,
+            saving: "省 93%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -402,9 +402,9 @@ const pricingCopy = {
             id: "claude-official",
             name: "Claude Official",
             description:
-              "2x rate · Equivalent to about 29% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial Claude subscription. Only Claude Code and Claude Desktop are supported; other agents such as OpenClaw and Hermes are not supported.",
-            multiplier: 2,
-            saving: "Save 71%",
+              "1.8x rate · Equivalent to about 25% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial Claude subscription. Only Claude Code and Claude Desktop are supported; other agents such as OpenClaw and Hermes are not supported.",
+            multiplier: 1.8,
+            saving: "Save 75%",
           },
         ] satisfies PriceGroup[],
         models: [
@@ -446,9 +446,9 @@ const pricingCopy = {
             id: "openai-official",
             name: "OpenaiOfficial",
             description:
-              "0.6x rate · Equivalent to about 8.5% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial OpenAI subscription. GPT-5.5 can serve as an alternative to Opus 4.7, recommended for programming",
-            multiplier: 0.6,
-            saving: "Save 91%",
+              "0.5x rate · Equivalent to about 7% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial OpenAI subscription. GPT-5.5 can serve as an alternative to Opus 4.7, recommended for programming",
+            multiplier: 0.5,
+            saving: "Save 93%",
           },
         ] satisfies PriceGroup[],
         models: [
