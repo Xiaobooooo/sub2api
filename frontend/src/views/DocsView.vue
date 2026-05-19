@@ -1209,12 +1209,14 @@ EOF</code></pre>
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect } from "vue";
+import { computed, nextTick, onMounted, watch, watchEffect } from "vue";
+import { useRoute } from "vue-router";
 import MarketingFooter from "@/components/marketing/MarketingFooter.vue";
 import MarketingHeader from "@/components/marketing/MarketingHeader.vue";
 import { useAppStore } from "@/stores";
 
 const appStore = useAppStore();
+const route = useRoute();
 
 const navGroups = [
   {
@@ -1269,6 +1271,36 @@ const siteName = computed(
 watchEffect(() => {
   document.title = `开发者文档 - ${siteName.value}`;
 });
+
+async function scrollToHashTarget(hash: string): Promise<void> {
+  const rawId = hash.startsWith("#") ? hash.slice(1) : hash;
+  if (!rawId) {
+    return;
+  }
+
+  let targetId: string;
+  try {
+    targetId = decodeURIComponent(rawId);
+  } catch {
+    targetId = rawId;
+  }
+
+  await nextTick();
+  window.requestAnimationFrame(() => {
+    document.getElementById(targetId)?.scrollIntoView({ block: "start" });
+  });
+}
+
+onMounted(() => {
+  void scrollToHashTarget(route.hash);
+});
+
+watch(
+  () => route.hash,
+  (hash) => {
+    void scrollToHashTarget(hash);
+  },
+);
 
 async function copyCodeBlock(event: MouseEvent): Promise<void> {
   const button =
