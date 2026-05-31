@@ -44,20 +44,7 @@
               {{ copy.hero.pricing }}
             </router-link>
           </div>
-          <div class="mt-8 grid gap-3 sm:grid-cols-3">
-            <div
-              v-for="stat in copy.hero.stats"
-              :key="stat.label"
-              class="rounded-2xl border border-gray-100 bg-white/80 p-4 shadow-card dark:border-dark-700/50 dark:bg-dark-800/70"
-            >
-              <div class="text-2xl font-bold text-gray-950 dark:text-white">
-                {{ stat.value }}
-              </div>
-              <div class="mt-1 text-sm text-gray-500 dark:text-dark-400">
-                {{ stat.label }}
-              </div>
-            </div>
-          </div>
+
         </div>
 
         <div class="flex items-center">
@@ -69,7 +56,7 @@
                   <span class="btn-minimize"></span>
                   <span class="btn-maximize"></span>
                 </div>
-                <span class="terminal-title">api-gateway</span>
+                <span class="terminal-title">Xiaobo Code</span>
                 <span class="terminal-status">{{ copy.panel.status }}</span>
               </div>
 
@@ -349,11 +336,6 @@ const homeCopy = {
       start: "立即开始",
       dashboard: "进入控制台",
       pricing: "查看模型",
-      stats: [
-        { value: "5+", label: "兼容生态" },
-        { value: "7", label: "支持模型" },
-        { value: "1￥:1＄", label: "充值比例" },
-      ],
     },
     panel: {
       title: "统一调用入口",
@@ -479,11 +461,6 @@ const homeCopy = {
       start: "Get started",
       dashboard: "Dashboard",
       pricing: "View models",
-      stats: [
-        { value: "5+", label: "Compatible tools" },
-        { value: "7", label: "Models" },
-        { value: "1￥:1＄", label: "Top-up ratio" },
-      ],
     },
     panel: {
       title: "Unified endpoint",
@@ -619,13 +596,13 @@ const terminalLines = [
     text: 'export ANTHROPIC_BASE_URL="https://api.xiaobocode.com"',
     className: "code-cmd",
   },
-  { prompt: false, text: "set base_url", className: "code-muted" },
+  // { prompt: false, text: "set base_url", className: "code-muted" },
   {
     prompt: true,
     text: 'export ANTHROPIC_AUTH_TOKEN="sk-..."',
     className: "code-cmd",
   },
-  { prompt: false, text: "set api_key", className: "code-muted" },
+  // { prompt: false, text: "set api_key", className: "code-muted" },
   {
     prompt: true,
     text: "export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1",

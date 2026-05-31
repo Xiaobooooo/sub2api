@@ -292,6 +292,13 @@ const pricingCopy = {
         ] satisfies PriceGroup[],
         models: [
           {
+            id: "claude-opus-4-8",
+            input: 35,
+            output: 175,
+            cacheWrite: 43.75,
+            cacheRead: 3.5,
+          },
+          {
             id: "claude-opus-4-7",
             input: 35,
             output: 175,
@@ -408,6 +415,13 @@ const pricingCopy = {
           },
         ] satisfies PriceGroup[],
         models: [
+          {
+            id: "claude-opus-4-8",
+            input: 35,
+            output: 175,
+            cacheWrite: 43.75,
+            cacheRead: 3.5,
+          },
           {
             id: "claude-opus-4-7",
             input: 35,
