@@ -236,7 +236,7 @@
                     <td>是</td>
                     <td>
                       模型标识，如
-                      <code>gpt-5.5</code>、<code>gpt-image-2</code>、<code>claude-opus-4-8</code>
+                      <code>gpt-5.5</code>、<code>gpt-image-2</code>、<code>claude-fable-5</code>、<code>claude-opus-4-8</code>
                     </td>
                   </tr>
                   <tr>
@@ -991,7 +991,7 @@ EOF</code></pre>
                   在刚添加的服务商下方，点击
                   <strong>添加模型</strong>，手动输入模型名称（如
                   <code>gpt-5.5</code
-                  >、<code>claude-opus-4-8</code>），或点击「获取模型列表」自动拉取可用模型。
+                  >、<code>claude-fable-5</code>、<code>claude-opus-4-8</code>），或点击「获取模型列表」自动拉取可用模型。
                 </p>
               </div>
               <div class="step">

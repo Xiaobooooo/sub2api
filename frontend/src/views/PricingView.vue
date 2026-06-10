@@ -1,44 +1,31 @@
 <template>
-  <div
-    class="min-h-screen bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100"
-  >
+  <div class="min-h-screen bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100">
     <div class="pointer-events-none fixed inset-0 bg-mesh-gradient"></div>
     <MarketingHeader />
 
-    <main
-      class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
-    >
+    <main class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <section class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
         <div>
           <div class="badge badge-primary w-fit">
             <Icon name="dollar" size="xs" />
             {{ copy.hero.badge }}
           </div>
-          <h1
-            class="mt-5 text-4xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-5xl"
-          >
+          <h1 class="mt-5 text-4xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-5xl">
             {{ copy.hero.title }}
           </h1>
-          <p
-            class="mt-4 max-w-2xl text-base leading-8 text-gray-600 dark:text-dark-300"
-          >
+          <p class="mt-4 max-w-2xl text-base leading-8 text-gray-600 dark:text-dark-300">
             {{ copy.hero.description }}
           </p>
         </div>
 
         <div class="card p-5">
           <div class="grid gap-3 sm:grid-cols-3">
-            <div
-              v-for="item in copy.hero.notes"
-              :key="item.label"
-              class="rounded-xl bg-gray-50 p-4 dark:bg-dark-900/70"
-            >
+            <div v-for="item in copy.hero.notes" :key="item.label"
+              class="rounded-xl bg-gray-50 p-4 dark:bg-dark-900/70">
               <p class="text-xs text-gray-500 dark:text-dark-400">
                 {{ item.label }}
               </p>
-              <p
-                class="mt-2 text-sm font-semibold text-gray-950 dark:text-white"
-              >
+              <p class="mt-2 text-sm font-semibold text-gray-950 dark:text-white">
                 {{ item.value }}
               </p>
             </div>
@@ -49,28 +36,17 @@
       <section class="mt-10">
         <div class="card overflow-hidden">
           <div class="card-header">
-            <div
-              class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
-            >
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 class="text-xl font-semibold text-gray-950 dark:text-white">
                   {{ copy.platforms.title }}
                 </h2>
               </div>
               <div class="tabs inline-flex w-fit max-w-full overflow-x-auto">
-                <button
-                  v-for="platform in platforms"
-                  :key="platform.id"
-                  type="button"
-                  class="tab flex shrink-0 items-center gap-2"
-                  :class="{ 'tab-active': activePlatform === platform.id }"
-                  @click="activePlatform = platform.id"
-                >
-                  <img
-                    :src="platform.logo"
-                    :alt="`${platform.label} logo`"
-                    class="h-4 w-4 object-contain"
-                  />
+                <button v-for="platform in platforms" :key="platform.id" type="button"
+                  class="tab flex shrink-0 items-center gap-2" :class="{ 'tab-active': activePlatform === platform.id }"
+                  @click="activePlatform = platform.id">
+                  <img :src="platform.logo" :alt="`${platform.label} logo`" class="h-4 w-4 object-contain" />
                   {{ platform.label }}
                 </button>
               </div>
@@ -79,18 +55,14 @@
 
           <div class="card-body">
             <div
-              class="rounded-xl border border-primary-100 bg-primary-50 p-4 dark:border-primary-800/50 dark:bg-primary-900/20"
-            >
+              class="rounded-xl border border-primary-100 bg-primary-50 p-4 dark:border-primary-800/50 dark:bg-primary-900/20">
               <div class="flex items-start gap-3">
                 <div
-                  class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-primary-600 shadow-sm dark:bg-dark-800 dark:text-primary-300"
-                >
+                  class="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-primary-600 shadow-sm dark:bg-dark-800 dark:text-primary-300">
                   <Icon name="calculator" size="sm" />
                 </div>
                 <div>
-                  <p
-                    class="mt-1 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300"
-                  >
+                  <p class="mt-1 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
                     {{ pricingRuleDescription }}
                   </p>
                 </div>
@@ -98,25 +70,13 @@
             </div>
 
             <div class="mt-3 grid gap-3 md:grid-cols-3">
-              <button
-                v-for="group in activePlatformData.groups"
-                :key="group.id"
-                type="button"
-                class="rounded-xl border p-4 text-left transition"
-                :class="
-                  group.id === activeGroupData.id
+              <button v-for="group in activePlatformData.groups" :key="group.id" type="button"
+                class="rounded-xl border p-4 text-left transition" :class="group.id === activeGroupData.id
                     ? 'border-primary-300 bg-primary-50 shadow-sm dark:border-primary-700/70 dark:bg-primary-900/20'
                     : 'border-gray-200 bg-gray-50 hover:border-primary-200 hover:bg-white dark:border-dark-700 dark:bg-dark-900/40 dark:hover:border-primary-700/60 dark:hover:bg-dark-800/70'
-                "
-                @click="selectedGroups[activePlatform] = group.id"
-              >
-                <span
-                  class="block text-base font-semibold text-gray-950 dark:text-white"
-                  >{{ group.name }}</span
-                >
-                <span
-                  class="mt-2 block whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300"
-                >
+                  " @click="selectedGroups[activePlatform] = group.id">
+                <span class="block text-base font-semibold text-gray-950 dark:text-white">{{ group.name }}</span>
+                <span class="mt-2 block whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
                   {{ group.description }}
                 </span>
               </button>
@@ -136,54 +96,33 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="model in activePlatformData.models"
-                      :key="model.id"
-                    >
+                    <tr v-for="model in activePlatformData.models" :key="model.id">
                       <td>
                         <div class="flex items-center gap-2">
-                          <span
-                            class="font-mono font-semibold text-gray-950 dark:text-white"
-                            >{{ model.id }}</span
-                          >
-                          <button
-                            type="button"
+                          <span class="font-mono font-semibold text-gray-950 dark:text-white">{{ model.id }}</span>
+                          <button type="button"
                             class="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700"
-                            :title="copy.table.copyModel"
-                            @click="copyModelId(model.id)"
-                          >
+                            :title="copy.table.copyModel" @click="copyModelId(model.id)">
                             <Icon name="copy" size="xs" />
                           </button>
                         </div>
                       </td>
                       <td>
-                        <PriceCell
-                          :price="model.input"
-                          :multiplier="activeGroupData.multiplier"
-                        />
+                        <PriceCell :price="model.input" :multiplier="activeGroupData.multiplier" />
                       </td>
                       <td>
-                        <PriceCell
-                          :price="model.output"
-                          :multiplier="activeGroupData.multiplier"
-                        />
+                        <PriceCell :price="model.output" :multiplier="activeGroupData.multiplier" />
                       </td>
                       <td>
-                        <PriceCell
-                          :price="model.cacheWrite"
-                          :multiplier="activeGroupData.multiplier"
-                        />
+                        <PriceCell :price="model.cacheWrite" :multiplier="activeGroupData.multiplier" />
                       </td>
                       <td>
-                        <PriceCell
-                          :price="model.cacheRead"
-                          :multiplier="activeGroupData.multiplier"
-                        />
+                        <PriceCell :price="model.cacheRead" :multiplier="activeGroupData.multiplier" />
                       </td>
                       <td>
                         <span class="badge badge-success">{{
                           activeGroupData.saving
-                        }}</span>
+                          }}</span>
                       </td>
                     </tr>
                   </tbody>
@@ -291,6 +230,13 @@ const pricingCopy = {
           },
         ] satisfies PriceGroup[],
         models: [
+          {
+            id: "claude-fable-5",
+            input: 70,
+            output: 350,
+            cacheWrite: 87.5,
+            cacheRead: 7,
+          },
           {
             id: "claude-opus-4-8",
             input: 35,
@@ -415,6 +361,13 @@ const pricingCopy = {
           },
         ] satisfies PriceGroup[],
         models: [
+          {
+            id: "claude-fable-5",
+            input: 70,
+            output: 350,
+            cacheWrite: 87.5,
+            cacheRead: 7,
+          },
           {
             id: "claude-opus-4-8",
             input: 35,
