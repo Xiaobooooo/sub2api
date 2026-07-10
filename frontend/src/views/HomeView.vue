@@ -610,7 +610,7 @@ const terminalLines = [
   },
   { prompt: true, text: "claude", className: "code-success" },
 ] as const;
-
+// Site settings - directly from appStore (already initialized from injected config)
 const activeLocale = computed(() => (locale.value === "zh" ? "zh" : "en"));
 const copy = computed(() => homeCopy[activeLocale.value]);
 const homeContent = computed(
@@ -623,6 +623,7 @@ const primaryCtaPath = computed(() => {
   }
   return authStore.isAdmin ? "/admin/dashboard" : "/dashboard";
 });
+
 const siteName = computed(
   () =>
     appStore.cachedPublicSettings?.site_name || appStore.siteName || "Sub2API",
