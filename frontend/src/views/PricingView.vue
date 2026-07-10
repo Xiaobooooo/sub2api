@@ -72,8 +72,8 @@
             <div class="mt-3 grid gap-3 md:grid-cols-3">
               <button v-for="group in activePlatformData.groups" :key="group.id" type="button"
                 class="rounded-xl border p-4 text-left transition" :class="group.id === activeGroupData.id
-                    ? 'border-primary-300 bg-primary-50 shadow-sm dark:border-primary-700/70 dark:bg-primary-900/20'
-                    : 'border-gray-200 bg-gray-50 hover:border-primary-200 hover:bg-white dark:border-dark-700 dark:bg-dark-900/40 dark:hover:border-primary-700/60 dark:hover:bg-dark-800/70'
+                  ? 'border-primary-300 bg-primary-50 shadow-sm dark:border-primary-700/70 dark:bg-primary-900/20'
+                  : 'border-gray-200 bg-gray-50 hover:border-primary-200 hover:bg-white dark:border-dark-700 dark:bg-dark-900/40 dark:hover:border-primary-700/60 dark:hover:bg-dark-800/70'
                   " @click="selectedGroups[activePlatform] = group.id">
                 <span class="block text-base font-semibold text-gray-950 dark:text-white">{{ group.name }}</span>
                 <span class="mt-2 block whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-dark-300">
@@ -122,7 +122,7 @@
                       <td>
                         <span class="badge badge-success">{{
                           activeGroupData.saving
-                          }}</span>
+                        }}</span>
                       </td>
                     </tr>
                   </tbody>
@@ -223,8 +223,7 @@ const pricingCopy = {
           {
             id: "claude-official",
             name: "Claude Official",
-            description:
-              "1.8x 倍率 · 相当于约 2.5 折(倍率动态调整，以实际分组为准)\nClaude官方订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等其他Agent",
+            description: "1.8x 倍率 · 相当于约 2.5 折(倍率动态调整，以实际分组为准)\nClaude官方订阅，只支持 Claude Code、Claude Desktop，不支持 OpenClaw、Hermes 等其他Agent",
             multiplier: 1.8,
             saving: "省 75%",
           },
@@ -245,25 +244,11 @@ const pricingCopy = {
             cacheRead: 3.5,
           },
           {
-            id: "claude-opus-4-7",
-            input: 35,
-            output: 175,
-            cacheWrite: 43.75,
-            cacheRead: 3.5,
-          },
-          {
-            id: "claude-opus-4-6",
-            input: 35,
-            output: 175,
-            cacheWrite: 43.75,
-            cacheRead: 3.5,
-          },
-          {
-            id: "claude-sonnet-4-6",
-            input: 21,
-            output: 105,
-            cacheWrite: 26.25,
-            cacheRead: 2.1,
+            id: "claude-sonnet-5",
+            input: 14,
+            output: 70,
+            cacheWrite: 17.5,
+            cacheRead: 1.4,
           },
           {
             id: "claude-haiku-4-5",
@@ -281,34 +266,40 @@ const pricingCopy = {
           {
             id: "openai-official",
             name: "OpenaiOfficial",
-            description:
-              "0.5x 倍率 · 相当于约 0.7 折(倍率动态调整，以实际分组为准)\nOpenAI官方订阅，GPT 5.5 可平替 Opus 4.7，推荐用于编码和养虾",
+            description: "0.5x 倍率 · 相当于约 0.7 折(倍率动态调整，以实际分组为准)\nOpenAI官方订阅",
             multiplier: 0.5,
             saving: "省 93%",
           },
         ] satisfies PriceGroup[],
         models: [
           {
-            id: "gpt-5.5",
+            id: "gpt-5.6-sol",
             input: 35,
             output: 210,
             cacheWrite: null,
             cacheRead: 3.5,
           },
           {
-            id: "gpt-5.4",
+            id: "gpt-5.6-terra",
             input: 17.5,
             output: 105,
             cacheWrite: null,
             cacheRead: 1.75,
           },
           {
-            id: "gpt-5.3-codex",
-            input: 12.25,
-            output: 98,
+            id: "gpt-5.6-luna",
+            input: 7,
+            output: 42,
             cacheWrite: null,
-            cacheRead: 1.23,
+            cacheRead: 0.7,
           },
+          {
+            id: "gpt-5.5",
+            input: 35,
+            output: 210,
+            cacheWrite: null,
+            cacheRead: 3.5,
+          }
         ] satisfies ModelPrice[],
       },
     },
@@ -354,8 +345,7 @@ const pricingCopy = {
           {
             id: "claude-official",
             name: "Claude Official",
-            description:
-              "1.8x rate · Equivalent to about 25% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial Claude subscription. Only Claude Code and Claude Desktop are supported; other agents such as OpenClaw and Hermes are not supported.",
+            description: "1.8x rate · Equivalent to about 25% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial Claude subscription. Only Claude Code and Claude Desktop are supported; other agents such as OpenClaw and Hermes are not supported.",
             multiplier: 1.8,
             saving: "Save 75%",
           },
@@ -376,25 +366,11 @@ const pricingCopy = {
             cacheRead: 3.5,
           },
           {
-            id: "claude-opus-4-7",
-            input: 35,
-            output: 175,
-            cacheWrite: 43.75,
-            cacheRead: 3.5,
-          },
-          {
-            id: "claude-opus-4-6",
-            input: 35,
-            output: 175,
-            cacheWrite: 43.75,
-            cacheRead: 3.5,
-          },
-          {
-            id: "claude-sonnet-4-6",
-            input: 21,
-            output: 105,
-            cacheWrite: 26.25,
-            cacheRead: 2.1,
+            id: "claude-sonnet-5",
+            input: 14,
+            output: 70,
+            cacheWrite: 17.5,
+            cacheRead: 1.4,
           },
           {
             id: "claude-haiku-4-5",
@@ -412,34 +388,40 @@ const pricingCopy = {
           {
             id: "openai-official",
             name: "OpenaiOfficial",
-            description:
-              "0.5x rate · Equivalent to about 7% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial OpenAI subscription. GPT-5.5 can serve as an alternative to Opus 4.7, recommended for programming",
+            description: "0.5x rate · Equivalent to about 7% of the original price (Rate dynamically adjusted; subject to actual grouping)\nOfficial OpenAI subscription.",
             multiplier: 0.5,
             saving: "Save 93%",
           },
         ] satisfies PriceGroup[],
         models: [
           {
-            id: "gpt-5.5",
+            id: "gpt-5.6-sol",
             input: 35,
             output: 210,
             cacheWrite: null,
             cacheRead: 3.5,
           },
           {
-            id: "gpt-5.4",
+            id: "gpt-5.6-terra",
             input: 17.5,
             output: 105,
             cacheWrite: null,
             cacheRead: 1.75,
           },
           {
-            id: "gpt-5.3-codex",
-            input: 12.25,
-            output: 98,
+            id: "gpt-5.6-luna",
+            input: 7,
+            output: 42,
             cacheWrite: null,
-            cacheRead: 1.23,
+            cacheRead: 0.7,
           },
+          {
+            id: "gpt-5.5",
+            input: 35,
+            output: 210,
+            cacheWrite: null,
+            cacheRead: 3.5,
+          }
         ] satisfies ModelPrice[],
       },
     },

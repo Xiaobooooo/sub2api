@@ -97,7 +97,7 @@
   <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
   <span class="op">-H</span> <span class="str">"Authorization: Bearer sk-YOUR_API_KEY"</span> \
   <span class="op">-d</span> <span class="str">'{
-    "model": "gpt-5.5",
+    "model": "gpt-5.6-sol",
     "messages": [
       {"role": "user", "content": "你好，请介绍一下你自己。"}
     ]
@@ -236,7 +236,7 @@
                     <td>是</td>
                     <td>
                       模型标识，如
-                      <code>gpt-5.5</code>、<code>gpt-image-2</code>、<code>claude-fable-5</code>、<code>claude-opus-4-8</code>
+                      <code>gpt-5.6-sol</code>、<code>gpt-image-2</code>、<code>claude-fable-5</code>、<code>claude-sonnet-5</code>、<code>claude-opus-4-8</code>
                     </td>
                   </tr>
                   <tr>
@@ -325,7 +325,7 @@
                 </button>
               </div>
               <pre><code>{
-  <span class="prop">"model"</span>: <span class="str">"gpt-5.5"</span>,
+  <span class="prop">"model"</span>: <span class="str">"gpt-5.6-sol"</span>,
   <span class="prop">"messages"</span>: [
     {
       <span class="prop">"role"</span>: <span class="str">"system"</span>,
@@ -359,7 +359,7 @@
   <span class="prop">"id"</span>: <span class="str">"chatcmpl-abc123def456"</span>,
   <span class="prop">"object"</span>: <span class="str">"chat.completion"</span>,
   <span class="prop">"created"</span>: <span class="num">1781654400</span>,
-  <span class="prop">"model"</span>: <span class="str">"gpt-5.5"</span>,
+  <span class="prop">"model"</span>: <span class="str">"gpt-5.6-sol"</span>,
   <span class="prop">"choices"</span>: [
     {
       <span class="prop">"index"</span>: <span class="num">0</span>,
@@ -553,7 +553,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.<span class="fn">create</span>(
-    <span class="var">model</span>=<span class="str">"gpt-5.5"</span>,
+    <span class="var">model</span>=<span class="str">"gpt-5.6-sol"</span>,
     <span class="var">messages</span>=[
         {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: <span class="str">"你是一个有帮助的AI助手。"</span>},
         {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"用Python实现一个二分查找算法。"</span>}
@@ -595,7 +595,7 @@ response = client.chat.completions.<span class="fn">create</span>(
 
 <span class="kw">async function</span> <span class="fn">main</span>() {
   <span class="kw">const</span> completion = <span class="kw">await</span> client.chat.completions.<span class="fn">create</span>({
-    <span class="var">model</span>: <span class="str">'gpt-5.5'</span>,
+    <span class="var">model</span>: <span class="str">'gpt-5.6-sol'</span>,
     <span class="var">messages</span>: [
       { <span class="var">role</span>: <span class="str">'system'</span>, <span class="var">content</span>: <span class="str">'你是一个有帮助的AI助手。'</span> },
       { <span class="var">role</span>: <span class="str">'user'</span>, <span class="var">content</span>: <span class="str">'用JavaScript实现一个防抖函数。'</span> }
@@ -654,7 +654,7 @@ client = OpenAI(
 )
 
 stream = client.chat.completions.<span class="fn">create</span>(
-    <span class="var">model</span>=<span class="str">"gpt-5.5"</span>,
+    <span class="var">model</span>=<span class="str">"gpt-5.6-sol"</span>,
     <span class="var">messages</span>=[
         {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"写一首关于春天的七言绝句。"</span>}
     ],
@@ -685,7 +685,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
 
 <span class="kw">async function</span> <span class="fn">main</span>() {
   <span class="kw">const</span> stream = <span class="kw">await</span> client.chat.completions.<span class="fn">create</span>({
-    <span class="var">model</span>: <span class="str">'gpt-5.5'</span>,
+    <span class="var">model</span>: <span class="str">'gpt-5.6-sol'</span>,
     <span class="var">messages</span>: [
       { <span class="var">role</span>: <span class="str">'user'</span>, <span class="var">content</span>: <span class="str">'写一首关于春天的七言绝句。'</span> }
     ],
@@ -718,7 +718,7 @@ stream = client.chat.completions.<span class="fn">create</span>(
   <span class="op">-H</span> <span class="str">"Authorization: Bearer sk-YOUR_API_KEY"</span> \
   <span class="op">-N</span> \
   <span class="op">-d</span> <span class="str">'{
-    "model": "gpt-5.5",
+    "model": "gpt-5.6-sol",
     "messages": [
       {"role": "user", "content": "你好"}
     ],
@@ -755,8 +755,8 @@ mkdir "$env:USERPROFILE\.codex"
 # 创建 config.toml
 @"
 model_provider = "OpenAI"
-model = "gpt-5.5"
-review_model = "gpt-5.5"
+model = "gpt-5.6-sol"
+review_model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 disable_response_storage = true
 network_access = "enabled"
@@ -799,8 +799,8 @@ mkdir -p ~/.codex
 # 创建 config.toml
 cat > ~/.codex/config.toml &lt;&lt; 'EOF'
 model_provider = "OpenAI"
-model = "gpt-5.5"
-review_model = "gpt-5.5"
+model = "gpt-5.6-sol"
+review_model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 disable_response_storage = true
 network_access = "enabled"
@@ -990,8 +990,8 @@ EOF</code></pre>
                 <p>
                   在刚添加的服务商下方，点击
                   <strong>添加模型</strong>，手动输入模型名称（如
-                  <code>gpt-5.5</code
-                  >、<code>claude-fable-5</code>、<code>claude-opus-4-8</code>），或点击「获取模型列表」自动拉取可用模型。
+                  <code>gpt-5.6-sol</code
+                  >、<code>claude-fable-5</code>、<code>claude-sonnet-5</code>、<code>claude-opus-4-8</code>），或点击「获取模型列表」自动拉取可用模型。
                 </p>
               </div>
               <div class="step">
@@ -1106,7 +1106,7 @@ EOF</code></pre>
                 平台支持哪些模型？模型列表会更新吗？
               </summary>
               <div class="faq-a">
-                当前支持 GPT-5.5、GPT-5.4 系列模型以及 Claude Opus/Sonnet/Haiku
+                当前支持 OpenAI 5.6、Image2 系列模型以及 Claude Opus/Sonnet/Haiku
                 系列最新。模型列表会随官方发布和平台运营状态更新，具体可用模型请以控制台和「支持的模型」章节为准。
               </div>
             </details>
