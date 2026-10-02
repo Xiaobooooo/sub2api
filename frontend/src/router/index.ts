@@ -37,7 +37,6 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: false,
       title: 'Home',
-      // titleKey: 'marketing.home.pageTitle'
     }
   },
   {
@@ -47,7 +46,6 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: false,
       title: '模型价格',
-      // titleKey: 'marketing.pricing.pageTitle'
     }
   },
   {
@@ -57,7 +55,6 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: false,
       title: '接入文档',
-      // titleKey: 'marketing.docs.pageTitle'
     }
   },
   {
